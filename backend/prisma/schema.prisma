@@ -1,0 +1,74 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id       String @id @default(uuid())
+  username String @unique
+  password String
+
+  rights AdminRole[] @default([PART])
+
+  createdEvents Event[]
+}
+
+enum AdminRole {
+  PART
+  FULL
+}
+
+model User {
+  id         String   @id @default(cuid())
+  telegramId BigInt   @unique @map("telegram_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  nickname     String
+  userCategory UserCategory @default(SchoolFrom9to11) @map("user_category")
+
+  events   Event[]
+  Feedback Feedback[]
+
+  @@map("users")
+}
+
+model Event {
+  id String @id @default(cuid())
+
+  title       String
+  description String
+
+  //Dates>
+  createdAt DateTime  @default(now()) @map("created_at")
+  endsAt    DateTime? @map("ends_at")
+  //<Dates
+
+  administrator Admin  @relation(fields: [adminId], references: [id])
+  adminId       String @map("administrator_id")
+
+  feedback     Feedback[]
+  participants User[]
+}
+
+model Feedback {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now()) @map("created_at")
+
+  rating  Int     @default(5)
+  comment String?
+
+  event       Event  @relation(fields: [eventId], references: [id])
+  eventId     String @map("event_id")
+  commentator User   @relation(fields: [userId], references: [id])
+  userId      String @map("user_id")
+}
+
+enum UserCategory {
+  SchoolBefore9
+  SchoolFrom9to11
+  Student
+}
