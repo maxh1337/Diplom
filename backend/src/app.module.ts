@@ -1,8 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { GoogleRecaptchaModule } from '@nestlab/google-recaptcha';
-import { getGoogleRecaptchaConfig } from './config/google-recaptcha.config';
 import { ScheduleModule } from '@nestjs/schedule';
+import { GoogleRecaptchaModule } from '@nestlab/google-recaptcha';
+import { AppController } from './app.controller';
+import { getGoogleRecaptchaConfig } from './config/google-recaptcha.config';
+import { UserModule } from './user/user.module';
+import { TelegramModule } from './telegram/telegram.module';
 
 @Module({
   imports: [
@@ -15,6 +18,9 @@ import { ScheduleModule } from '@nestjs/schedule';
       inject: [ConfigService],
     }),
     ScheduleModule.forRoot(),
+    TelegramModule,
+    UserModule,
   ],
+  controllers: [AppController],
 })
 export class AppModule {}

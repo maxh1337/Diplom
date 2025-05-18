@@ -1,0 +1,72 @@
+.
+├── index.html
+├── package.json
+├── pnpm-lock.yaml
+├── project-structure.txt
+├── README.md
+├── src
+│   ├── app
+│   │   ├── App.tsx
+│   │   ├── components
+│   │   │   ├── BottomMenu.tsx
+│   │   │   ├── Layout.tsx
+│   │   │   └── SplashScreen.tsx
+│   │   ├── config
+│   │   │   ├── Providers.tsx
+│   │   │   ├── Tg.tsx
+│   │   │   └── YouCantAccesFromBrowser.tsx
+│   │   ├── globals.css
+│   │   ├── pages
+│   │   │   ├── Home.tsx
+│   │   │   ├── NotFound.tsx
+│   │   │   └── Profile.tsx
+│   │   └── routes
+│   │       ├── index.tsx
+│   │       └── ProtectedRoute.tsx
+│   ├── assets
+│   ├── EnvUnsupported.tsx
+│   ├── features
+│   │   ├── events
+│   │   │   ├── components
+│   │   │   │   ├── Event.tsx
+│   │   │   │   ├── EventDetailsPopup.tsx
+│   │   │   │   ├── EventHashtag.tsx
+│   │   │   │   └── EventItem.tsx
+│   │   │   └── hooks
+│   │   └── home
+│   │       ├── components
+│   │       │   ├── ContrinueRegistrationForm.tsx
+│   │       │   ├── UpcomingEvents.tsx
+│   │       │   └── UserProfileCard.tsx
+│   │       └── hooks
+│   │           └── useContinueRegistration.ts
+│   ├── initTelegramSdk.ts
+│   ├── lib
+│   │   ├── api
+│   │   │   ├── api.helper.ts
+│   │   │   └── axios.ts
+│   │   └── modules
+│   │       ├── event
+│   │       │   └── event.types.ts
+│   │       └── user
+│   │           ├── user.service.ts
+│   │           └── user.types.ts
+│   ├── main.tsx
+│   ├── shared
+│   │   ├── components
+│   │   │   ├── InputField.tsx
+│   │   │   ├── ReactSelect.tsx
+│   │   │   └── TgUser.tsx
+│   │   └── hooks
+│   │       ├── useDebounce.ts
+│   │       ├── useDebugTg.ts
+│   │       ├── useShowBottomMenu.ts
+│   │       ├── useSplashScreenZustand.ts
+│   │       └── useTgUserZustand.ts
+│   └── vite-env.d.ts
+├── tsconfig.app.json
+├── tsconfig.json
+├── tsconfig.node.json
+└── vite.config.ts
+
+23 directories, 47 files

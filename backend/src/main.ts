@@ -9,15 +9,23 @@ async function bootstrap() {
 
   app.setGlobalPrefix('api');
   app.use(cookieParser());
-  //test commit from another user
+  // test commit from another user
   app.enableCors({
     origin: [
       'http://localhost:3000',
-      'http://localhost:4000',
-      'https://e61b-106-249-226-194.ngrok-free.app',
+      'http://localhost:5173',
+      'https://webapp-react-khaki.vercel.app',
+      'https://yummy-toes-pay.loca.lt',
     ],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     credentials: true,
-    exposedHeaders: 'set-cookie',
+    allowedHeaders: [
+      'Content-Type',
+      'Accept',
+      'ngrok-skip-browser-warning',
+      'Authorization',
+      'x-init-data',
+    ],
   });
 
   const uploadsPath = join(process.cwd(), 'uploads');
@@ -29,7 +37,9 @@ async function bootstrap() {
     },
   });
 
+  console.log('🚀 Starting NestJS server...');
   await app.listen(4200);
+  console.log('✅ Server listening on port 4200');
 }
 
 bootstrap();

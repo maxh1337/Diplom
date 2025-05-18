@@ -23,15 +23,21 @@ enum AdminRole {
 }
 
 model User {
-  id         String   @id @default(cuid())
-  telegramId BigInt   @unique @map("telegram_id")
-  createdAt  DateTime @default(now()) @map("created_at")
+  id                String   @id @default(cuid())
+  telegramId        String   @unique @map("telegram_id")
+  telegramUsername  String   @unique @map("telegram_username")
+  telegramFirstName String?
+  telegramLastName  String?
+  createdAt         DateTime @default(now()) @map("created_at")
 
-  nickname     String
+  nickname     String?
   userCategory UserCategory @default(SchoolFrom9to11) @map("user_category")
+  yearOfBirth  Int?         @map("year_of_birth")
 
   events   Event[]
   Feedback Feedback[]
+
+  photoUrl String? @map("photo_url")
 
   @@map("users")
 }
@@ -39,8 +45,10 @@ model User {
 model Event {
   id String @id @default(cuid())
 
+  image       EventImage? @relation("Event Avatar")
   title       String
   description String
+  hashTags    String[]
 
   //Dates>
   createdAt DateTime  @default(now()) @map("created_at")
@@ -52,6 +60,16 @@ model Event {
 
   feedback     Feedback[]
   participants User[]
+}
+
+model EventImage {
+  id   String @id @default(cuid())
+  path String
+
+  createdAt DateTime @default(now())
+
+  event   Event  @relation("Event Avatar", fields: [eventId], references: [id])
+  eventId String @unique @map("event_id")
 }
 
 model Feedback {
