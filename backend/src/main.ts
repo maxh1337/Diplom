@@ -15,7 +15,7 @@ async function bootstrap() {
       'http://localhost:3000',
       'http://localhost:5173',
       'https://webapp-react-khaki.vercel.app',
-      'https://yummy-toes-pay.loca.lt',
+      'https://fancy-birds-shop.loca.lt',
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     credentials: true,

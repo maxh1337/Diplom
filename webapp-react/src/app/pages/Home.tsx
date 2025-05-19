@@ -20,7 +20,7 @@ export default function Home() {
   }
 
   return (
-    <section className=" w-full flex flex-col items-center pt-10">
+    <section className=" w-full flex flex-col items-center h-full pt-5">
       {!user?.nickname ? (
         <ContrinueRegistrationForm />
       ) : (

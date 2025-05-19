@@ -9,7 +9,7 @@ export default function Layout() {
   return (
     <Providers>
       <div className="h-full bg-black pt-tg">
-        <main className="px-5 flex flex-col items-center pt-tg h-full bg-black ">
+        <main className="px-5 items-center h-[80vh] bg-black flex flex-col pt-tg">
           <Outlet />
           {isVisible && <BottomMenu />}
         </main>

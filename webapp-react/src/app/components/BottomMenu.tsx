@@ -1,4 +1,8 @@
-import { HomeIcon, UserIcon } from "@heroicons/react/24/outline";
+import {
+  ChatBubbleBottomCenterIcon,
+  HomeIcon,
+  UserIcon,
+} from "@heroicons/react/24/outline";
 import { MdEvent } from "react-icons/md";
 import { NavLink } from "react-router-dom";
 import { useSplashScreenZustand } from "../../shared/hooks/useSplashScreenZustand";
@@ -24,6 +28,11 @@ export default function BottomMenu() {
       url: "/profile",
       icon: <UserIcon className="size-6" />,
     },
+    {
+      name: "Chatbot",
+      url: "/chatbot",
+      icon: <ChatBubbleBottomCenterIcon className="size-6" />,
+    },
   ].filter(
     (item) =>
       item.name !== "Profile" || (item.name === "Profile" && user?.nickname)
@@ -38,7 +47,7 @@ export default function BottomMenu() {
   }
 
   return (
-    <section className="fixed bottom-0 left-0 w-full  backdrop-blur-sm h-16 px-5 flex items-center z-50 pb-tg">
+    <section className="fixed bottom-0 left-0 w-full backdrop-blur-sm h-16 px-5 flex items-center z-50 pb-tg">
       <div className="flex justify-around w-full">
         {menuItems.map((item, idx) => (
           <NavLink

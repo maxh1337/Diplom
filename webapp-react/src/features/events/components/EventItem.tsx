@@ -10,7 +10,7 @@ interface EventItemProps {
 export default function EventItem({ event, open }: EventItemProps) {
   return (
     <div
-      className={twMerge("flex gap-4 mt-5 p-3 bg-secondary rounded-lg")}
+      className={twMerge("flex gap-4 mt-5 p-3 bg-secondary rounded-lg ")}
       onClick={() => {
         open();
       }}
