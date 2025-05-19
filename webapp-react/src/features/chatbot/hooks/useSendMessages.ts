@@ -1,28 +1,16 @@
-import { useState } from "react";
+import type { Message } from "../components/GeminiChatbot";
+import { useChatZustand } from "./useChatZustand";
 
-type Message = {
-  id: string;
-  role: "assistant" | "user" | "system";
-  content: string;
-};
-
-const useChatMessages = () => {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: "system-1",
-      role: "system",
-      content: "Отвечай только на русском языке.",
-    },
-  ]);
-  const [message, setMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+const useSendMessage = () => {
+  const { messages, message, setMessages, setMessage, setIsLoading } =
+    useChatZustand();
 
   const handleSendMessage = async () => {
     if (!message.trim()) return;
 
     const userMessageId = crypto.randomUUID();
     const newMessages: Message[] = [
-      ...messages.slice(-10), // Ограничиваем до последних 10 сообщений
+      ...messages.slice(-10),
       { id: userMessageId, role: "user", content: message },
     ];
     setMessages(newMessages);
@@ -87,14 +75,14 @@ const useChatMessages = () => {
       setIsLoading(false);
       if (finalResponse) {
         const assistantMessageId = crypto.randomUUID();
-        setMessages((prev) => [
-          ...prev,
+        setMessages([
+          ...newMessages,
           { id: assistantMessageId, role: "assistant", content: finalResponse },
         ]);
       } else {
         const errorMessageId = crypto.randomUUID();
-        setMessages((prev) => [
-          ...prev,
+        setMessages([
+          ...newMessages,
           {
             id: errorMessageId,
             role: "assistant",
@@ -106,8 +94,8 @@ const useChatMessages = () => {
       console.error("Error sending message to Chutes API:", error);
       setIsLoading(false);
       const errorMessageId = crypto.randomUUID();
-      setMessages((prev) => [
-        ...prev,
+      setMessages([
+        ...newMessages,
         {
           id: errorMessageId,
           role: "assistant",
@@ -117,14 +105,7 @@ const useChatMessages = () => {
     }
   };
 
-  return {
-    messages,
-    message,
-    setMessage,
-    isLoading,
-    handleSendMessage,
-    setMessages,
-  };
+  return { handleSendMessage };
 };
 
-export default useChatMessages;
+export default useSendMessage;

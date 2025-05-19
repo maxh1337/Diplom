@@ -9,13 +9,12 @@ async function bootstrap() {
 
   app.setGlobalPrefix('api');
   app.use(cookieParser());
-  // test commit from another user
   app.enableCors({
     origin: [
       'http://localhost:3000',
       'http://localhost:5173',
       'https://webapp-react-khaki.vercel.app',
-      'https://fancy-birds-shop.loca.lt',
+      'https://fuzzy-days-taste.loca.lt',
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     credentials: true,

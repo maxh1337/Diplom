@@ -2,18 +2,20 @@ import { useEffect, useRef } from "react";
 import { twMerge } from "tailwind-merge";
 import { useDebugTgZustand } from "../../../shared/hooks/useDebugTg";
 import { useShowBottomMenu } from "../../../shared/hooks/useShowBottomMenu";
-import useChatMessages from "../hooks/useChatMessages";
+import { useChatZustand } from "../hooks/useChatZustand";
 import useParseMarkdown from "../hooks/useParseMarkdown";
+import useSendMessage from "../hooks/useSendMessages";
 import useViewport from "../hooks/useViewport";
-type Message = {
+
+export type Message = {
   id: string;
   role: "assistant" | "user" | "system";
   content: string;
 };
 
 const GeminiChatbot = () => {
-  const { messages, message, setMessage, isLoading, handleSendMessage } =
-    useChatMessages();
+  const { messages, message, setMessage, isLoading } = useChatZustand();
+  const { handleSendMessage } = useSendMessage();
   const setBottomMenuVisible = useShowBottomMenu((s) => s.setIsVisible);
   const { parseMarkdown } = useParseMarkdown();
   const { isKeyboardOpen } = useViewport();
@@ -33,7 +35,8 @@ const GeminiChatbot = () => {
   };
 
   const handleBlur = () => {
-    if (!isKeyboardOpen) {
+    if (!isKeyboardOpen && platform !== "tdesktop") {
+      setBottomMenuVisible(true);
     }
   };
 
@@ -48,6 +51,7 @@ const GeminiChatbot = () => {
           : "77vh",
       }}
     >
+      <p className=" mt-3 ml-3 font-brain font-bold text-xl">Чат с ИИ</p>
       <div className="flex-1 overflow-y-auto p-4 rounded-xl m-2">
         <div className="flex flex-col gap-2">
           {messages

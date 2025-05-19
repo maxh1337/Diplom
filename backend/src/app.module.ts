@@ -2,10 +2,13 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { GoogleRecaptchaModule } from '@nestlab/google-recaptcha';
+import { AdminModule } from './admin/admin.module';
 import { AppController } from './app.controller';
+import { AuthModule } from './auth/auth.module';
 import { getGoogleRecaptchaConfig } from './config/google-recaptcha.config';
-import { UserModule } from './user/user.module';
+import { EventModule } from './event/event.module';
 import { TelegramModule } from './telegram/telegram.module';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -20,6 +23,9 @@ import { TelegramModule } from './telegram/telegram.module';
     ScheduleModule.forRoot(),
     TelegramModule,
     UserModule,
+    EventModule,
+    AdminModule,
+    AuthModule,
   ],
   controllers: [AppController],
 })

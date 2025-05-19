@@ -1,4 +1,4 @@
-import { bindViewportCssVars, viewport } from "@telegram-apps/sdk-react";
+import { bindViewportCssVars } from "@telegram-apps/sdk-react";
 import { useEffect, useState } from "react";
 import { useShowBottomMenu } from "../../../shared/hooks/useShowBottomMenu";
 
@@ -9,16 +9,8 @@ const useViewport = () => {
   useEffect(() => {
     async function initViewport() {
       try {
-        if (viewport.mount.isAvailable() && !viewport.isMounting()) {
-          await viewport.mount();
-        }
-
         if (bindViewportCssVars.isAvailable()) {
           bindViewportCssVars();
-        }
-
-        if (viewport.expand.isAvailable()) {
-          viewport.expand();
         }
 
         const updateKeyboardState = () => {

@@ -15,6 +15,8 @@ model Admin {
   rights AdminRole[] @default([PART])
 
   createdEvents Event[]
+
+  @@map("admins")
 }
 
 enum AdminRole {
@@ -51,8 +53,9 @@ model Event {
   hashTags    String[]
 
   //Dates>
-  createdAt DateTime  @default(now()) @map("created_at")
-  endsAt    DateTime? @map("ends_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  eventDate DateTime @map("event_date")
+  eventTime String   @map("event_time")
   //<Dates
 
   administrator Admin  @relation(fields: [adminId], references: [id])

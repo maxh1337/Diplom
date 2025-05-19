@@ -24,14 +24,14 @@ export default function BottomMenu() {
       icon: <MdEvent className="size-6" />,
     },
     {
-      name: "Profile",
-      url: "/profile",
-      icon: <UserIcon className="size-6" />,
-    },
-    {
       name: "Chatbot",
       url: "/chatbot",
       icon: <ChatBubbleBottomCenterIcon className="size-6" />,
+    },
+    {
+      name: "Profile",
+      url: "/profile",
+      icon: <UserIcon className="size-6" />,
     },
   ].filter(
     (item) =>
