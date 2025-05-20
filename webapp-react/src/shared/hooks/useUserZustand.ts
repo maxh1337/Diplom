@@ -24,11 +24,10 @@ export const useUserZustand = create<UserStateZustand>((set) => ({
   fetchProfile: async (initData: string) => {
     try {
       set({ isLoading: true });
-      console.log("FetchProfileZustand", initData);
+
       const profileRes = await userService.fetchProfile(initData);
 
       const profile = profileRes?.data ?? null;
-      console.log("ProfileZustand", profile);
 
       set({ user: profile, isLoading: false });
     } catch (error: any) {

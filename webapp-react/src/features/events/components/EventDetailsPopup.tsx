@@ -68,7 +68,7 @@ export default function EventDetailsPopup({
             >
               <button
                 onClick={onClose}
-                className="absolute top-2 right-2 text-white bg-black rounded-full p-1 px-2.5 hover:bg-gray-600 transition text-sm"
+                className="absolute top-2 right-2 text-white bg-black rounded-full p-1 px-2.5 hover:bg-gray-600 transition text-sm cursor-pointer"
                 aria-label="Закрыть"
               >
                 X
@@ -93,7 +93,9 @@ export default function EventDetailsPopup({
                 </div>
                 <div className="flex gap-2 text-white mb-2">
                   <p className="font-brain font-bold">Дата:</p>
-                  <p className="font-unbound">{event.eventDate.toString()}</p>
+                  <p className="font-unbound">
+                    {event.eventDate.toString().split("T")[0]}
+                  </p>
                 </div>
                 <div className="flex gap-2 text-white mb-2">
                   <p className="font-brain font-bold">Время:</p>
@@ -112,7 +114,7 @@ export default function EventDetailsPopup({
                     "bg-black text-yellow-300 px-6 py-3 rounded-2xl border-secondary border cursor-pointer",
                     "first-letter:text-white",
                     "font-logo text-yellow-300 text-lg",
-                    "hover:bg-gray-800",
+                    "hover:bg-gray-800 transition-colors duration-300 ease-in-out",
                     isPending ? "cursor-wait opacity-50" : ""
                   )}
                   onClick={() => handleParticipate()}

@@ -51,7 +51,7 @@ const GeminiChatbot = () => {
           : "77vh",
       }}
     >
-      <p className=" mt-3 ml-3 font-brain font-bold text-xl">Чат с ИИ</p>
+      <p className=" mt-3 ml-4 font-brain font-bold text-xl">Чат с ИИ</p>
       <div className="flex-1 overflow-y-auto p-4 rounded-xl m-2">
         <div className="flex flex-col gap-2">
           {messages
@@ -60,7 +60,7 @@ const GeminiChatbot = () => {
               <div
                 key={msg.id}
                 className={twMerge(
-                  "bg-gray-800 text-white p-3 rounded-lg max-w-[80%] mb-4",
+                  "bg-gray-800 text-white p-3 rounded-lg max-w-[80%] mb-4 font-unbound",
                   msg.role === "user"
                     ? " bg-third text-white self-end"
                     : " bg-third text-white self-start"
@@ -88,12 +88,12 @@ const GeminiChatbot = () => {
             onKeyDown={(e) => {
               if (e.key === "Enter") handleSendMessage();
             }}
-            className="flex-1 bg-gray-700 text-white px-4 py-2 rounded-xl outline-none"
+            className="flex-1 bg-third placeholder:text-fourth px-4 py-2 rounded-xl outline-none text-white font-brain w-full"
             placeholder="Спроси что-нибудь..."
           />
           <button
             onClick={handleSendMessage}
-            className="bg-white text-black rounded-xl px-4 py-2"
+            className="bg-third text-white rounded-xl px-4 py-2 cursor-pointer hover:bg-black hover:text-white transition-colors ease-in-out duration-200 font-unbound"
           >
             Отправить
           </button>

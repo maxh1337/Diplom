@@ -13,8 +13,8 @@ import { Request, Response } from 'express';
 import { AdminService } from '../admin/admin.service';
 import { getClientIp } from '../utils/get-current-user-ip';
 import { AuthService } from './auth.service';
-import { RefreshTokenService } from './refresh-token.service';
 import { AuthDto } from './dto/Auth.dto';
+import { RefreshTokenService } from './refresh-token.service';
 // import { Recaptcha } from '@nestlab/google-recaptcha'
 
 @Controller()
@@ -54,8 +54,6 @@ export class AuthController {
   ) {
     const refreshTokenFromCookies =
       req.cookies[this.refreshTokenService.REFRESH_TOKEN_NAME];
-
-    console.log(refreshTokenFromCookies);
 
     if (!refreshTokenFromCookies) {
       this.refreshTokenService.removeTokensFromResponse(res);

@@ -14,7 +14,7 @@ async function bootstrap() {
       'http://localhost:3000',
       'http://localhost:5173',
       'https://webapp-react-khaki.vercel.app',
-      'https://free-mails-camp.loca.lt',
+      'https://happy-ducks-stare.loca.lt',
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     credentials: true,

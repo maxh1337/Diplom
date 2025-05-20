@@ -6,7 +6,10 @@ export default function EventsSearch() {
     useEventFiltersStore();
 
   const [searchTerm, setSearchTerm] = useState(filters.title ?? "");
+  const [showAllTags, setShowAllTags] = useState(false);
+
   const selectedTags = filters.hashTags ?? [];
+  const maxVisibleTags = 9;
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -22,25 +25,29 @@ export default function EventsSearch() {
     updateFilter("hashTags", updatedTags.length ? updatedTags : undefined);
   };
 
+  const visibleTags = showAllTags
+    ? availableHashtags
+    : availableHashtags.slice(0, maxVisibleTags);
+
   return (
-    <div className="w-full mt-4 space-y-4">
+    <div className="w-full mt-4 h-full flex flex-col">
       <input
         type="text"
         placeholder="Поиск по названию..."
-        className="w-full p-2 rounded bg-gray-800 text-white placeholder-gray-400"
+        className="w-full p-2 rounded-xl bg-third text-white placeholder-fourth font-brain"
         value={searchTerm}
         onChange={handleTitleChange}
       />
 
-      <div className="flex flex-wrap gap-2">
-        {availableHashtags.map((tag) => (
+      <div className="flex flex-wrap gap-2 mt-4 mb-2 ">
+        {visibleTags.map((tag) => (
           <button
             key={tag}
             onClick={() => toggleTag(tag)}
-            className={`px-3 py-1 rounded-xl text-sm ${
+            className={`px-2.5 py-1 rounded-xl text-sm font-brain ${
               selectedTags.includes(tag)
-                ? "bg-blue-500 text-white"
-                : "bg-gray-700 text-gray-300"
+                ? "bg-fourth text-white"
+                : "bg-third text-white"
             }`}
           >
             {tag}
@@ -48,12 +55,21 @@ export default function EventsSearch() {
         ))}
       </div>
 
+      {availableHashtags.length > maxVisibleTags && (
+        <button
+          onClick={() => setShowAllTags((prev) => !prev)}
+          className="text-sm text-white hover:text-yellow-300 font-brain px-2 underline cursor-pointer self-start transition-colors duration-200 ease-in-out"
+        >
+          {showAllTags ? "Скрыть теги" : "Показать все теги"}
+        </button>
+      )}
+
       <button
         onClick={() => {
           resetFilters();
           setSearchTerm("");
         }}
-        className="text-sm text-red-400 underline hover:text-red-300"
+        className="text-sm text-red-400 underline hover:text-red-300 self-end font-brain cursor-pointer transition-colors duration-200 ease-in-out"
       >
         Сбросить фильтры
       </button>

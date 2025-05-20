@@ -28,7 +28,6 @@ export class EventController {
     @Param('eventId') eventId: string,
     @CurrentTgUser() telegramUser: User,
   ) {
-    console.log(eventId);
     return this.eventService.iWillGoOnEvent(
       telegramUser.id.toString(),
       eventId,

@@ -31,7 +31,6 @@ export class AdminController {
     @CurrentAdmin('id') creatorId: string,
     @Body() dto: CreateEventDto,
   ) {
-    console.log(dto);
     return this.eventService.create(creatorId, dto);
   }
 }
