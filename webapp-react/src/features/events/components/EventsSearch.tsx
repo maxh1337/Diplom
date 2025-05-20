@@ -30,7 +30,7 @@ export default function EventsSearch() {
     : availableHashtags.slice(0, maxVisibleTags);
 
   return (
-    <div className="w-full mt-4 h-full flex flex-col">
+    <div className="w-full mt-4 flex flex-col">
       <input
         type="text"
         placeholder="Поиск по названию..."
