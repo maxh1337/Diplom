@@ -1,4 +1,4 @@
-import { useUserZustand } from "../hooks/useTgUserZustand";
+import { useUserZustand } from "../hooks/useUserZustand";
 
 export default function TgUser() {
   const { isLoading, user } = useUserZustand();

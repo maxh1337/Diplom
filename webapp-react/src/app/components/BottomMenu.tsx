@@ -6,7 +6,7 @@ import {
 import { MdEvent } from "react-icons/md";
 import { NavLink } from "react-router-dom";
 import { useSplashScreenZustand } from "../../shared/hooks/useSplashScreenZustand";
-import { useUserZustand } from "../../shared/hooks/useTgUserZustand";
+import { useUserZustand } from "../../shared/hooks/useUserZustand";
 
 export default function BottomMenu() {
   const { user } = useUserZustand();

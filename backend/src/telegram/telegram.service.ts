@@ -18,7 +18,6 @@ export class TelegramService implements OnModuleInit, OnModuleDestroy {
     const webAppUrl = this.config.get<string>('WEBAPP_URL');
 
     this.bot.start((ctx) => {
-      console.log('Получена команда /start от:', ctx.from);
       ctx.reply('Открыть WebApp:', {
         reply_markup: {
           inline_keyboard: [

@@ -1,4 +1,4 @@
-import UserProfileCard from "../../features/home/components/UserProfileCard";
+import UserProfileCard from "../../features/home/components/ProfileCard";
 
 export default function Profile() {
   return (

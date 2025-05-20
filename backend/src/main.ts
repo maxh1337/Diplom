@@ -14,7 +14,7 @@ async function bootstrap() {
       'http://localhost:3000',
       'http://localhost:5173',
       'https://webapp-react-khaki.vercel.app',
-      'https://fuzzy-days-taste.loca.lt',
+      'https://every-baboons-accept.loca.lt',
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     credentials: true,
@@ -28,7 +28,7 @@ async function bootstrap() {
   });
 
   const uploadsPath = join(process.cwd(), 'uploads');
-  console.log(`Serving static files from: ${uploadsPath}`);
+
   app.useStaticAssets(uploadsPath, {
     prefix: '/uploads',
     setHeaders: (res, path) => {
@@ -39,6 +39,7 @@ async function bootstrap() {
   console.log('🚀 Starting NestJS server...');
   await app.listen(4200);
   console.log('✅ Server listening on port 4200');
+  console.log(`Serving static files from: ${uploadsPath}`);
 }
 
 bootstrap();

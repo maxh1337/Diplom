@@ -7,8 +7,9 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
+import { TgAuth } from './decorators/tg-auth.decorator';
+import { CurrentTgUser } from './decorators/tg-user.decorator';
 import { ContinueRegistrationDto } from './dto/contrinue-registration.dto';
-import { TelegramUser } from './guard/telegram.guard';
 import { ITelegramUser } from './types/tg-user-info.types';
 import { UserService } from './user.service';
 
@@ -17,18 +18,22 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get('me/get-profile')
-  async getProfile(@TelegramUser() telegramUser: ITelegramUser) {
+  @TgAuth()
+  async getProfile(@CurrentTgUser() telegramUser: ITelegramUser) {
     return this.userService.getProfile(telegramUser);
   }
 
   @Post('me/continue-registration/')
   @UsePipes(new ValidationPipe())
   @HttpCode(200)
+  @TgAuth()
   async ContinueRegistrationDto(
     @Body() dto: ContinueRegistrationDto,
-    @TelegramUser() user: ITelegramUser,
+    @CurrentTgUser() telegramUser: ITelegramUser,
   ) {
-    console.log(user);
-    return this.userService.ContinueRegistrationDto(user.id.toString(), dto);
+    return this.userService.ContinueRegistrationDto(
+      telegramUser.id.toString(),
+      dto,
+    );
   }
 }

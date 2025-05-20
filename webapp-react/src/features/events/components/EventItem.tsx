@@ -16,12 +16,16 @@ export default function EventItem({ event, open }: EventItemProps) {
       }}
     >
       <img
-        src={event.image}
+        src={
+          event.image
+            ? event.image?.path
+            : "https://web3.avolites.com/Portals/0/news/2016%20v2/Jewel/5.21_The%20Chainsmokers_JEWEL%20Grand%20Opening_Photo%20Credit%20Al%20Powers%206.jpg?ver=2016-08-05-114212-697"
+        }
         alt={`Test alt`}
         className={twMerge("w-23 h-23 rounded-lg object-cover")}
       />
       <div className="overflow-hidden">
-        <p className="font-unbound text-white text-xl mb-2">Test</p>
+        <p className="font-unbound text-white text-xl mb-2">{event.title}</p>
         <div
           className=" flex gap-2 overflow-x-auto max-w-full scrollbar-hide"
           onClick={(e) => e.stopPropagation()}

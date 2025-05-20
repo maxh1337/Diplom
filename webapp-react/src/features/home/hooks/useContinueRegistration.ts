@@ -6,7 +6,7 @@ import type {
   IContinueRegistration,
   IUser,
 } from "../../../lib/modules/user/user.types";
-import { useUserZustand } from "../../../shared/hooks/useTgUserZustand";
+import { useUserZustand } from "../../../shared/hooks/useUserZustand";
 
 export function useContinueRegistration() {
   const { setUser } = useUserZustand();

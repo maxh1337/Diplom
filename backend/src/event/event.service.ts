@@ -1,4 +1,9 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
@@ -62,6 +67,7 @@ export class EventService {
         eventDate: true,
         eventTime: true,
         hashTags: true,
+        participants: true,
       },
     });
 
@@ -75,6 +81,84 @@ export class EventService {
     }
 
     return events;
+  }
+
+  async iWillGoOnEvent(telegramUserId: string, eventId: string) {
+    const tgUser = await this.prisma.user.findUnique({
+      where: {
+        telegramId: telegramUserId,
+      },
+      include: {
+        events: true,
+      },
+    });
+
+    if (!tgUser) throw new BadRequestException('User not found');
+
+    const event = await this.prisma.event.findUnique({
+      where: {
+        id: eventId,
+      },
+      include: {
+        participants: true,
+      },
+    });
+
+    if (!event) throw new BadRequestException('Event not found');
+
+    const isParticipating = event.participants.find(
+      (participant) => participant.id === tgUser.id,
+    );
+
+    if (isParticipating) {
+      await this.prisma.event.update({
+        where: { id: eventId },
+        data: {
+          participants: {
+            disconnect: { id: tgUser.id },
+          },
+        },
+      });
+      return { isParticipating: false, message: 'You have left the event' };
+    } else {
+      await this.prisma.event.update({
+        where: { id: eventId },
+        data: {
+          participants: {
+            connect: { id: tgUser.id },
+          },
+        },
+      });
+      return { isParticipating: true, message: 'You have joined the event' };
+    }
+  }
+
+  async getById(eventId: string) {
+    const event = await this.prisma.event.findUnique({
+      where: {
+        id: eventId,
+      },
+      select: {
+        id: true,
+        title: true,
+        description: true,
+        hashTags: true,
+        createdAt: true,
+        eventDate: true,
+        eventTime: true,
+        adminId: false,
+        administrator: false,
+        participants: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
+
+    if (!event) throw new NotFoundException('Event to found');
+
+    return event;
   }
 
   async giveEventFeedback() {}
@@ -113,7 +197,7 @@ export class EventService {
 
   async update() {}
   async delete() {}
-  async getById() {}
+  async getByIdAdmin() {}
   async deleteEventMember() {}
 
   // CRON задача на смену статуса на архивный, после окончания даты проведения мероприятия

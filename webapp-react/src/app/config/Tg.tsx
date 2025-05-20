@@ -4,7 +4,7 @@ import { initData, retrieveLaunchParams } from "@telegram-apps/sdk-react";
 import { useEffect } from "react";
 import { initTelegramSdk } from "../../initTelegramSdk";
 import { useDebugTgZustand } from "../../shared/hooks/useDebugTg";
-import { useUserZustand } from "../../shared/hooks/useTgUserZustand";
+import { useUserZustand } from "../../shared/hooks/useUserZustand";
 
 export function Tg() {
   const { fetchProfile, setInitData } = useUserZustand();

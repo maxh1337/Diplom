@@ -75,4 +75,22 @@ export class UserService {
 
     return updated;
   }
+
+  async getByTgId(tgId: string) {
+    const tgUser = await this.prisma.user.findUnique({
+      where: {
+        telegramId: tgId,
+      },
+      include: {
+        events: true,
+        Feedback: true,
+      },
+    });
+
+    if (!tgUser) {
+      return null;
+    }
+
+    return tgUser;
+  }
 }

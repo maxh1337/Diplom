@@ -37,7 +37,7 @@ const customStyles = {
   }),
   option: (provided: any, state: any) => ({
     ...provided,
-    backgroundColor: state.isFocused ? "#4B5563" : "#1B1B1E",
+    backgroundColor: state.isFocused ? "#6a7282" : "#1B1B1E",
     color: "#FFFFFF",
     fontFamily: "Unbounded Variable, sans-serif",
     fontWeight: "200",
@@ -45,13 +45,13 @@ const customStyles = {
   }),
   placeholder: (provided: any) => ({
     ...provided,
-    color: "#a5a5a5",
+    color: "#6a7282",
     fontFamily: "Geist Sans, sans-serif",
     fontWeight: "200",
   }),
   dropdownIndicator: (provided: any) => ({
     ...provided,
-    color: "#a5a5a5",
+    color: "#6a7282",
     "&:hover": {
       color: "#D1D5DB",
     },

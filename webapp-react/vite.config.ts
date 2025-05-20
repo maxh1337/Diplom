@@ -5,6 +5,6 @@ import { defineConfig } from "vite";
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
-    allowedHosts: ["fuzzy-days-taste.loca.lt"],
+    allowedHosts: ["every-baboons-accept.loca.lt"],
   },
 });

@@ -72,7 +72,7 @@ export default function ContrinueRegistrationForm() {
             max={new Date().getFullYear()}
             className={twMerge(
               "bg-secondary text-white font-unbound font-extralight p-4 rounded-lg focus:outline-none",
-              " placeholder:text-third focus:bg-black border-2 focus:border-white border-secondary"
+              " placeholder:text-fourth focus:bg-black border-2 focus:border-white border-secondary"
             )}
             required
           />

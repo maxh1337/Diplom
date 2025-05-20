@@ -63,6 +63,8 @@ model Event {
 
   feedback     Feedback[]
   participants User[]
+
+  isActive Boolean @default(true) @map("is_active")
 }
 
 model EventImage {

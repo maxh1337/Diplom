@@ -1,8 +1,8 @@
 import ContrinueRegistrationForm from "../../features/home/components/ContrinueRegistrationForm";
+import ProfileCard from "../../features/home/components/ProfileCard";
 import UpcomingEvents from "../../features/home/components/UpcomingEvents";
-import UserProfileCard from "../../features/home/components/UserProfileCard";
 import { useSplashScreenZustand } from "../../shared/hooks/useSplashScreenZustand";
-import { useUserZustand } from "../../shared/hooks/useTgUserZustand";
+import { useUserZustand } from "../../shared/hooks/useUserZustand";
 import SplashScreen from "../components/SplashScreen";
 
 export default function Home() {
@@ -25,7 +25,7 @@ export default function Home() {
         <ContrinueRegistrationForm />
       ) : (
         <>
-          <UserProfileCard variant="horizontal" />
+          <ProfileCard variant="horizontal" />
           <UpcomingEvents />
         </>
       )}
