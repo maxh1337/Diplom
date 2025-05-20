@@ -27,19 +27,16 @@ export default function EventDetailsPopup({
 }: EventDetailsPopupProps) {
   const { platform } = useDebugTgZustand();
   const { user } = useUserZustand();
+  const { toggleParticipation, isPending } = useParticipate();
 
   const isParticipating = event.participants.some(
     (participant) => participant.id === user?.id
   );
 
-  const { toggleParticipation, isPending, isSuccess } = useParticipate();
-
-  const handleParticipate = () => {
-    toggleParticipation(event.id);
-
-    if (isSuccess) {
-      refetchEvent();
-    }
+  const handleParticipate = async () => {
+    await toggleParticipation(event.id, {
+      onSuccess: async () => await refetchEvent(),
+    });
   };
 
   const buttonText = !isParticipating ? "ЯБуду" : "ЯПередумал";
@@ -127,7 +124,17 @@ export default function EventDetailsPopup({
                       Загрузка...
                     </span>
                   ) : (
-                    buttonText
+                    <AnimatePresence mode="wait">
+                      <motion.span
+                        key={buttonText}
+                        initial={{ opacity: 0, y: 5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -5 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        {buttonText}
+                      </motion.span>
+                    </AnimatePresence>
                   )}
                 </button>
               </div>

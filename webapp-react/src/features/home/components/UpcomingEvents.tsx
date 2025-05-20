@@ -1,8 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import eventService from "../../../lib/modules/event/event.service";
 import type { IEventFilters } from "../../../lib/modules/event/event.types";
-import Event from "../../events/components/Event";
-import EventItemSkeleton from "../../events/components/skeletons/EventItemSkeleton";
+import Events from "../../events/components/Events";
 
 export default function UpcomingEvents() {
   const filters: IEventFilters = {
@@ -18,17 +17,7 @@ export default function UpcomingEvents() {
   return (
     <section className="w-full flex mt-6 flex-col">
       <h1 className="text-white font-brain text-xl">Ближайшие мероприятия</h1>
-      <div>
-        {isEventsLoading ? (
-          <div className="space-y-4">
-            {[...Array(3)].map((_, idx) => (
-              <EventItemSkeleton key={idx} />
-            ))}
-          </div>
-        ) : (
-          events?.map((event) => <Event eventId={event.id} key={event.id} />)
-        )}
-      </div>
+      <Events events={events} isEventsLoading={isEventsLoading} />
     </section>
   );
 }

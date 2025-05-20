@@ -11,13 +11,13 @@ export class EventController {
   constructor(private readonly eventService: EventService) {}
 
   @Get('/get-all')
-  @TgAuth()
+  // @TgAuth()
   async getAll(@Query() dto: EventFilters) {
     return this.eventService.getEvents(dto);
   }
 
   @Get('/get-by-id/:id')
-  // @TgAuth()
+  @TgAuth()
   async getById(@Param('id') eventId: string) {
     return this.eventService.getById(eventId);
   }

@@ -5,7 +5,7 @@ import { useSplashScreenZustand } from "../../shared/hooks/useSplashScreenZustan
 import { useUserZustand } from "../../shared/hooks/useUserZustand";
 import SplashScreen from "../components/SplashScreen";
 
-export default function Home() {
+export default function HomePage() {
   const { isLoading, user } = useUserZustand();
   const { isVisible, setIsVisible } = useSplashScreenZustand();
 

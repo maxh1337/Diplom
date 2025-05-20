@@ -2,9 +2,11 @@ import {
   BadRequestException,
   ForbiddenException,
   Injectable,
+  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { Cron, CronExpression } from '@nestjs/schedule';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
 import { CreateEventDto } from './dto/create-event.dto';
@@ -12,6 +14,7 @@ import { EventFilters } from './dto/event.filters';
 
 @Injectable()
 export class EventService {
+  private readonly logger = new Logger(EventService.name);
   constructor(
     private readonly prisma: PrismaService,
     private readonly config: ConfigService,
@@ -22,17 +25,9 @@ export class EventService {
     let { hashTags } = filters || {};
 
     if (typeof hashTags === 'string') {
-      try {
-        const parsed = JSON.parse(hashTags);
-        if (Array.isArray(parsed)) {
-          hashTags = parsed;
-        } else {
-          hashTags = [];
-        }
-      } catch (err) {
-        console.warn('Не удалось распарсить hashTags:', err);
-        hashTags = [];
-      }
+      hashTags = [hashTags];
+    } else if (!Array.isArray(hashTags)) {
+      hashTags = [];
     }
 
     const andConditions: Prisma.EventWhereInput[] = [];
@@ -46,7 +41,7 @@ export class EventService {
       });
     }
 
-    if (Array.isArray(hashTags) && hashTags.length > 0) {
+    if (hashTags.length > 0) {
       andConditions.push({
         hashTags: {
           hasSome: hashTags,
@@ -56,7 +51,9 @@ export class EventService {
 
     const where: Prisma.EventWhereInput = andConditions.length
       ? { AND: andConditions }
-      : {};
+      : {
+          isActive: true,
+        };
 
     let events = await this.prisma.event.findMany({
       where,
@@ -200,8 +197,45 @@ export class EventService {
   async getByIdAdmin() {}
   async deleteEventMember() {}
 
-  // CRON задача на смену статуса на архивный, после окончания даты проведения мероприятия
-  async updateEventStatus() {}
+  @Cron(CronExpression.EVERY_MINUTE)
+  async deactivatePastEvents() {
+    const now = new Date();
 
+    const activeEvents = await this.prisma.event.findMany({
+      where: { isActive: true },
+    });
+
+    for (const event of activeEvents) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const [_, endTime] = event.eventTime.split('-');
+
+      const [endHour, endMinute] = endTime.split(':').map(Number);
+
+      const eventEnd = new Date(
+        event.eventDate.getFullYear(),
+        event.eventDate.getMonth(),
+        event.eventDate.getDate(),
+        endHour,
+        endMinute,
+        0,
+        0,
+      );
+
+      if (now > eventEnd) {
+        await this.prisma.event.update({
+          where: { id: event.id },
+          data: { isActive: false },
+        });
+
+        this.logger.log(
+          `Событие "${event.title}" деактивировано. Конец: ${eventEnd.toISOString()}`,
+        );
+      }
+    }
+  }
+
+  //
+  //
+  //
   // Методы для создания документов и выгрузки
 }

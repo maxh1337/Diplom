@@ -10,7 +10,7 @@ export function useParticipate() {
   } = useMutation({
     mutationKey: ["toggle-participation"],
     mutationFn: async (eventId: string) => {
-      return eventService.toggleEventParticipation(eventId);
+      return await eventService.toggleEventParticipation(eventId);
     },
     onSuccess: () => {
       toast.success("Success");
