@@ -30,8 +30,8 @@ export default function EventItem({ event, open }: EventItemProps) {
           className=" flex gap-2 overflow-x-auto max-w-full scrollbar-hide"
           onClick={(e) => e.stopPropagation()}
         >
-          {event.hashTags.map((hashTag) => (
-            <EventHashtag hashTag={hashTag} />
+          {event.hashTags.map((hashTag, idx) => (
+            <EventHashtag hashTag={hashTag} key={idx} />
           ))}
         </div>
       </div>

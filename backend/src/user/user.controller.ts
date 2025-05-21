@@ -23,6 +23,13 @@ export class UserController {
     return this.userService.getProfile(telegramUser);
   }
 
+  @Get('me/get-my-events')
+  @TgAuth()
+  async getMyEvents(@CurrentTgUser() telegramUser: ITelegramUser) {
+    console.log('Get MY Events');
+    return this.userService.getMyEvents(telegramUser);
+  }
+
   @Post('me/continue-registration/')
   @UsePipes(new ValidationPipe())
   @HttpCode(200)

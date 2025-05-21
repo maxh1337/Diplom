@@ -1,7 +1,7 @@
 import qs from "qs";
 import { axiosSecure } from "../../api/axios";
 import type { IUser } from "../user/user.types";
-import type { IEvent, IEventFilters } from "./event.types";
+import type { IEvent, IEventFeedback, IEventFilters } from "./event.types";
 
 class EventService {
   private _BASE_URL = "/event";
@@ -21,6 +21,13 @@ class EventService {
   async toggleEventParticipation(eventId: string) {
     return axiosSecure.post<IUser>(
       `${this._BASE_URL}/toggle-participation/${eventId}`
+    );
+  }
+
+  async sendFeedback(rating: number, eventId: string, comment?: string) {
+    return axiosSecure.post<IEventFeedback>(
+      `${this._BASE_URL}/send-feedback/${eventId}`,
+      { rating: rating, comment: comment ? comment : "" }
     );
   }
 }

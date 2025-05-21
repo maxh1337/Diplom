@@ -81,7 +81,7 @@ export default function ContrinueRegistrationForm() {
           type="submit"
           className={twMerge(
             "bg-secondary text-white font-brain py-3 px-4 rounded-lg transition-colors mt-4 border-2 border-black",
-            "hover:bg-black hover:border-white curp"
+            "hover:bg-black hover:border-white"
           )}
         >
           Продолжить

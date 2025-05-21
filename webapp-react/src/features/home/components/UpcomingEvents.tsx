@@ -15,7 +15,7 @@ export default function UpcomingEvents() {
   });
 
   return (
-    <section className="w-full flex mt-6 flex-col">
+    <section className="w-full flex mt-6 flex-col pb-17">
       <h1 className="text-white font-brain text-xl">Ближайшие мероприятия</h1>
       <Events events={events} isEventsLoading={isEventsLoading} />
     </section>

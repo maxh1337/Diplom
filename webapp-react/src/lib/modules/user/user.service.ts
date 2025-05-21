@@ -1,5 +1,5 @@
 import { axiosSecure } from "../../api/axios";
-import type { IContinueRegistration, IUser } from "./user.types";
+import type { IContinueRegistration, IMyEvents, IUser } from "./user.types";
 
 class UserService {
   private _BASE_URL = "/users";
@@ -15,6 +15,10 @@ class UserService {
       `${this._BASE_URL}/me/continue-registration/`,
       dto
     );
+  }
+
+  async getMyEvents() {
+    return axiosSecure.get<IMyEvents>(`${this._BASE_URL}/me/get-my-events`);
   }
 }
 

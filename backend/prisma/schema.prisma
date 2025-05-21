@@ -84,10 +84,10 @@ model Feedback {
   rating  Int     @default(5)
   comment String?
 
-  event       Event  @relation(fields: [eventId], references: [id])
-  eventId     String @map("event_id")
-  commentator User   @relation(fields: [userId], references: [id])
-  userId      String @map("user_id")
+  event   Event  @relation(fields: [eventId], references: [id])
+  eventId String @map("event_id")
+  user    User   @relation(fields: [userId], references: [id])
+  userId  String @map("user_id")
 }
 
 enum UserCategory {

@@ -3,6 +3,8 @@ import type {
   RefetchOptions,
 } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
+import { FaStar } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 import type { IEvent } from "../../../lib/modules/event/event.types";
 import { useDebugTgZustand } from "../../../shared/hooks/useDebugTg";
@@ -29,6 +31,8 @@ export default function EventDetailsPopup({
   const { user } = useUserZustand();
   const { toggleParticipation, isPending } = useParticipate();
 
+  const navigate = useNavigate();
+
   const isParticipating = event.participants.some(
     (participant) => participant.id === user?.id
   );
@@ -38,6 +42,10 @@ export default function EventDetailsPopup({
       onSuccess: async () => await refetchEvent(),
     });
   };
+
+  const myFeedback = event.feedback.find(
+    (feedback) => feedback.userId === user?.id
+  );
 
   const buttonText = !isParticipating ? "ЯБуду" : "ЯПередумал";
 
@@ -109,36 +117,85 @@ export default function EventDetailsPopup({
                 </p>
               </div>
               <div className="mt-4 text-center">
-                <button
-                  className={twMerge(
-                    "bg-black text-yellow-300 px-6 py-3 rounded-2xl border-secondary border cursor-pointer",
-                    "first-letter:text-white",
-                    "font-logo text-yellow-300 text-lg",
-                    "hover:bg-gray-800 transition-colors duration-300 ease-in-out",
-                    isPending ? "cursor-wait opacity-50" : ""
-                  )}
-                  onClick={() => handleParticipate()}
-                  disabled={isPending}
-                >
-                  {isPending ? (
-                    <span className="flex items-center justify-center">
-                      <span className="animate-spin rounded-full h-6 w-6 border-4 border-t-yellow-300 border-gray-700 mr-3"></span>
-                      Загрузка...
-                    </span>
-                  ) : (
-                    <AnimatePresence mode="wait">
-                      <motion.span
-                        key={buttonText}
-                        initial={{ opacity: 0, y: 5 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -5 }}
-                        transition={{ duration: 0.2 }}
-                      >
-                        {buttonText}
-                      </motion.span>
-                    </AnimatePresence>
-                  )}
-                </button>
+                {event.isActive ? (
+                  <button
+                    className={twMerge(
+                      "bg-black text-yellow-300 px-6 py-3 rounded-2xl border-secondary border cursor-pointer",
+                      "first-letter:text-white",
+                      "font-logo text-yellow-300 text-lg",
+                      "hover:bg-gray-800 transition-colors duration-300 ease-in-out",
+                      isPending ? "cursor-wait opacity-50" : ""
+                    )}
+                    onClick={() => handleParticipate()}
+                    disabled={isPending}
+                  >
+                    {isPending ? (
+                      <span className="flex items-center justify-center">
+                        <span className="animate-spin rounded-full h-6 w-6 border-4 border-t-yellow-300 border-gray-700 mr-3"></span>
+                        Загрузка...
+                      </span>
+                    ) : (
+                      <AnimatePresence mode="wait">
+                        <motion.span
+                          key={buttonText}
+                          initial={{ opacity: 0, y: 5 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -5 }}
+                          transition={{ duration: 0.2 }}
+                        >
+                          {buttonText}
+                        </motion.span>
+                      </AnimatePresence>
+                    )}
+                  </button>
+                ) : !!myFeedback ? (
+                  <div className="mt-4">
+                    <p className="text-yellow-300 font-logo text-lg mb-1 text-left pl-4">
+                      Ваш отзыв:
+                    </p>
+                    <div className=" bg-third p-4 rounded-2xl text-left">
+                      <div className="flex items-center mb-2">
+                        <div
+                          className={twMerge(
+                            "text-sm text-gray-400 font-brain mr-2"
+                          )}
+                        >
+                          @{user?.telegramUsername || "unknown"}
+                        </div>
+                        {[...Array(5)].map((_, index) => (
+                          <FaStar
+                            key={index}
+                            className={twMerge(
+                              "text-xl mr-1 transition-all",
+                              index < myFeedback.rating
+                                ? "text-yellow-300"
+                                : "text-gray-600"
+                            )}
+                          />
+                        ))}
+                      </div>
+                      {myFeedback.comment && (
+                        <p className="text-white font-brain text-sm whitespace-pre-wrap">
+                          {myFeedback.comment}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <button
+                    className={twMerge(
+                      "bg-black text-yellow-300 px-6 py-3 rounded-2xl border-secondary border cursor-pointer",
+                      "first-letter:text-white",
+                      "font-logo text-yellow-300 text-lg",
+                      "hover:bg-gray-800 transition-colors duration-300 ease-in-out",
+                      isPending ? "cursor-wait opacity-50" : ""
+                    )}
+                    onClick={() => navigate(`/leave-feedback?id=${event.id}`)}
+                    disabled={isPending}
+                  >
+                    Оставить отзыв
+                  </button>
+                )}
               </div>
             </motion.div>
           </motion.div>

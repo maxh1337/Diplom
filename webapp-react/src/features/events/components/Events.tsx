@@ -9,7 +9,7 @@ interface EventsProps {
 
 export default function Events({ events, isEventsLoading }: EventsProps) {
   return (
-    <div className="pb-17 w-full">
+    <div className="w-full">
       {isEventsLoading ? (
         <div className="space-y-4">
           {[...Array(3)].map((_, idx) => (

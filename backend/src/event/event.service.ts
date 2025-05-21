@@ -11,6 +11,7 @@ import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { EventFilters } from './dto/event.filters';
+import { SendFeedbackDto } from './dto/send-feeback.dto';
 
 @Injectable()
 export class EventService {
@@ -150,6 +151,15 @@ export class EventService {
             id: true,
           },
         },
+        isActive: true,
+        feedback: {
+          select: {
+            id: true,
+            userId: true,
+            rating: true,
+            comment: true,
+          },
+        },
       },
     });
 
@@ -158,7 +168,54 @@ export class EventService {
     return event;
   }
 
-  async giveEventFeedback() {}
+  async sendFeedback(
+    dto: SendFeedbackDto,
+    telegramUserId: string,
+    eventId: string,
+  ) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        telegramId: telegramUserId,
+      },
+    });
+
+    if (!user) throw new BadRequestException('User not found');
+
+    const event = await this.prisma.event.findUnique({
+      where: {
+        id: eventId,
+      },
+    });
+
+    if (!event) throw new NotFoundException('Event not found');
+
+    const feedback = await this.prisma.feedback.create({
+      data: {
+        rating: dto.rating,
+        comment: dto.comment ? dto.comment : null,
+        user: {
+          connect: {
+            id: user.id,
+          },
+        },
+        event: {
+          connect: {
+            id: event.id,
+          },
+        },
+      },
+      select: {
+        id: true,
+        createdAt: true,
+        rating: true,
+        comment: true,
+        eventId: true,
+        userId: true,
+      },
+    });
+
+    return feedback;
+  }
 
   // ADMIN
   async create(adminId: string, dto: CreateEventDto) {

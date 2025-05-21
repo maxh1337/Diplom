@@ -15,11 +15,49 @@ export class UserService {
     private config: ConfigService,
   ) {}
 
+  async getMyEvents(tgUser: ITelegramUser) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        telegramId: tgUser.id.toString(),
+      },
+      include: {
+        events: {
+          select: {
+            id: true,
+            isActive: true,
+          },
+        },
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    const upcomingEvents = user?.events.filter((event) => event.isActive) ?? [];
+    const pastEvents = user?.events.filter((event) => !event.isActive) ?? [];
+
+    return {
+      upcomingEvents: upcomingEvents,
+      pastEvents: pastEvents,
+    };
+  }
+
   async getProfile(tgUser: ITelegramUser) {
     const telegramId = tgUser.id.toString();
 
     const user = await this.prisma.user.findUnique({
       where: { telegramId },
+      include: {
+        events: {
+          select: {
+            id: true,
+            eventDate: true,
+            eventTime: true,
+            isActive: true,
+          },
+        },
+      },
     });
 
     if (!user) {

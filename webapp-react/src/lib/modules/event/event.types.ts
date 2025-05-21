@@ -1,5 +1,3 @@
-import type { IUser } from "../user/user.types";
-
 export interface IEvent {
   id: string;
 
@@ -14,6 +12,8 @@ export interface IEvent {
   //
   participants: IEventUser[];
   feedback: IEventFeedback[];
+
+  isActive: boolean;
 }
 
 export interface IEventUser {
@@ -27,7 +27,8 @@ export interface IEventFeedback {
   comment?: string;
 
   eventId: string;
-  commentator: IUser;
+  userId: string;
+  // user: IUser;
 }
 
 export interface IEventImage {

@@ -30,3 +30,8 @@ export const UserCategoryType = {
 
 export type UserCategoryType =
   (typeof UserCategoryType)[keyof typeof UserCategoryType];
+
+export interface IMyEvents {
+  upcomingEvents: IEvent[];
+  pastEvents: IEvent[];
+}
