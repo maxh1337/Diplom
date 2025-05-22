@@ -8,9 +8,11 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { Prisma } from '@prisma/client';
+import { AdminEventFilters } from '../admin/dto/admin-event-filters.dto';
+import { EventImageService } from '../event-image/event-image.service';
 import { PrismaService } from '../prisma.service';
 import { CreateEventDto } from './dto/create-event.dto';
-import { EventFilters } from './dto/event.filters';
+import { EventFilters } from './dto/event-filters.dto';
 import { SendFeedbackDto } from './dto/send-feeback.dto';
 
 @Injectable()
@@ -19,6 +21,7 @@ export class EventService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly config: ConfigService,
+    private readonly eventImageService: EventImageService,
   ) {}
 
   async getEvents(filters?: EventFilters) {
@@ -66,6 +69,14 @@ export class EventService {
         eventTime: true,
         hashTags: true,
         participants: true,
+        image: {
+          select: {
+            id: true,
+            path: true,
+            createdAt: true,
+            eventId: true,
+          },
+        },
       },
     });
 
@@ -160,6 +171,14 @@ export class EventService {
             comment: true,
           },
         },
+        image: {
+          select: {
+            id: true,
+            path: true,
+            createdAt: true,
+            eventId: true,
+          },
+        },
       },
     });
 
@@ -218,17 +237,17 @@ export class EventService {
   }
 
   // ADMIN
-  async create(adminId: string, dto: CreateEventDto) {
+  async create(
+    adminId: string,
+    dto: CreateEventDto,
+    file?: Express.Multer.File,
+  ) {
     const admin = await this.prisma.admin.findUnique({
-      where: {
-        id: adminId,
-      },
+      where: { id: adminId },
     });
 
     if (!admin) {
-      throw new ForbiddenException(
-        'Administrator not found. Access forbidden!!',
-      );
+      throw new ForbiddenException('Администратор не найден');
     }
 
     const event = await this.prisma.event.create({
@@ -246,13 +265,192 @@ export class EventService {
       },
     });
 
+    if (file) {
+      await this.eventImageService.createImage(event.id, file);
+    }
+
     return event;
   }
 
-  async update() {}
-  async delete() {}
-  async getByIdAdmin() {}
-  async deleteEventMember() {}
+  async update(
+    eventId: string,
+    dto: CreateEventDto,
+    file?: Express.Multer.File,
+  ) {
+    const event = await this.prisma.event.findUnique({
+      where: { id: eventId },
+    });
+
+    if (!event) {
+      throw new NotFoundException('Событие не найдено');
+    }
+
+    const updatedEvent = await this.prisma.event.update({
+      where: { id: eventId },
+      data: {
+        title: dto.title,
+        description: dto.description,
+        hashTags: dto.hashTags,
+        eventDate: new Date(dto.eventDate),
+        eventTime: dto.eventTime,
+      },
+    });
+
+    if (file) {
+      await this.eventImageService.updateImage(eventId, file);
+    }
+
+    return updatedEvent;
+  }
+
+  async getEventsAdmin(filters?: AdminEventFilters) {
+    const { title, latest, isActive } = filters || {};
+    let { hashTags } = filters || {};
+
+    if (typeof hashTags === 'string') {
+      hashTags = [hashTags];
+    } else if (!Array.isArray(hashTags)) {
+      hashTags = [];
+    }
+
+    const andConditions: Prisma.EventWhereInput[] = [];
+
+    if (title?.trim()) {
+      andConditions.push({
+        title: {
+          contains: title.trim(),
+          mode: 'insensitive',
+        },
+      });
+    }
+
+    if (hashTags.length > 0) {
+      andConditions.push({
+        hashTags: {
+          hasSome: hashTags,
+        },
+      });
+    }
+
+    const where: Prisma.EventWhereInput = andConditions.length
+      ? { AND: andConditions }
+      : {
+          isActive: isActive,
+        };
+
+    let events = await this.prisma.event.findMany({
+      where,
+      include: {
+        participants: {
+          select: {
+            id: true,
+            nickname: true,
+            telegramId: true,
+            telegramUsername: true,
+            telegramFirstName: true,
+            telegramLastName: true,
+            userCategory: true,
+            yearOfBirth: true,
+            photoUrl: true,
+          },
+        },
+        feedback: true,
+        administrator: {
+          select: {
+            id: true,
+            username: true,
+          },
+        },
+        image: true,
+      },
+    });
+
+    if (latest) {
+      events = events
+        .sort(
+          (a, b) =>
+            new Date(b.eventDate).getTime() - new Date(a.eventDate).getTime(),
+        )
+        .slice(0, 3);
+    }
+
+    return events;
+  }
+
+  async delete(eventId: string) {
+    const event = await this.prisma.event.findUnique({
+      where: { id: eventId },
+    });
+
+    if (!event) {
+      throw new NotFoundException('Событие не найдено');
+    }
+
+    return this.prisma.event.delete({
+      where: { id: eventId },
+    });
+  }
+
+  async getByIdAdmin(eventId: string) {
+    const event = await this.prisma.event.findUnique({
+      where: { id: eventId },
+      include: {
+        participants: {
+          select: {
+            id: true,
+            nickname: true,
+            telegramId: true,
+            telegramUsername: true,
+            telegramFirstName: true,
+            telegramLastName: true,
+            userCategory: true,
+            yearOfBirth: true,
+            photoUrl: true,
+          },
+        },
+        feedback: true,
+        administrator: {
+          select: {
+            id: true,
+            username: true,
+          },
+        },
+      },
+    });
+
+    if (!event) {
+      throw new NotFoundException('Событие не найдено');
+    }
+
+    return event;
+  }
+
+  async deleteEventMember(eventId: string, userId: string) {
+    const event = await this.prisma.event.findUnique({
+      where: { id: eventId },
+      include: { participants: true },
+    });
+
+    if (!event) {
+      throw new NotFoundException('Событие не найдено');
+    }
+
+    const isParticipant = event.participants.some((p) => p.id === userId);
+    if (!isParticipant) {
+      throw new NotFoundException(
+        'Пользователь не является участником события',
+      );
+    }
+
+    return this.prisma.event.update({
+      where: { id: eventId },
+      data: {
+        participants: {
+          disconnect: { id: userId },
+        },
+      },
+    });
+  }
 
   @Cron(CronExpression.EVERY_MINUTE)
   async deactivatePastEvents() {

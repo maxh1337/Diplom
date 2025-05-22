@@ -1,0 +1,48 @@
+"use server";
+
+import { type NextRequest } from "next/server";
+import { ADMIN_PAGES } from "../../../../shared/config/pages/admin.config";
+import { AuthToken, CookieSettings } from "../../auth/auth.types";
+import { getTokensFromRequest } from "../utils/get-tokens-from-request";
+import { jwtVerifyServer } from "../utils/jwt-verify";
+import { nextRedirect } from "../utils/next-redirect";
+
+export async function protectLoginPages(request: NextRequest) {
+  const { tokens, response } = await getTokensFromRequest(request);
+  if (!tokens) return response;
+
+  const verifiedData = await jwtVerifyServer(tokens.accessToken);
+  if (!verifiedData) return response;
+
+  // Авторизован — редирект на /dashboard
+  const redirectResponse = nextRedirect(ADMIN_PAGES.HOME, request.url);
+
+  const accessTokenCookie = response.cookies.get(AuthToken.ACCESS_TOKEN);
+  const refreshTokenCookie = response.cookies.get(AuthToken.REFRESH_TOKEN);
+
+  if (accessTokenCookie) {
+    redirectResponse.cookies.set({
+      name: AuthToken.ACCESS_TOKEN,
+      value: accessTokenCookie.value,
+      httpOnly: CookieSettings.HTTP_ONLY,
+      secure: CookieSettings.SECURE,
+      sameSite: CookieSettings.SAME_SITE,
+      path: CookieSettings.PATH,
+      maxAge: CookieSettings.ACCESS_TOKEN_MAX_AGE,
+    });
+  }
+
+  if (refreshTokenCookie) {
+    redirectResponse.cookies.set({
+      name: AuthToken.REFRESH_TOKEN,
+      value: refreshTokenCookie.value,
+      httpOnly: CookieSettings.HTTP_ONLY,
+      secure: CookieSettings.SECURE,
+      sameSite: CookieSettings.SAME_SITE,
+      path: CookieSettings.PATH,
+      maxAge: CookieSettings.REFRESH_TOKEN_MAX_AGE,
+    });
+  }
+
+  return redirectResponse;
+}

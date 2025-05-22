@@ -9,6 +9,7 @@ import { getGoogleRecaptchaConfig } from './config/google-recaptcha.config';
 import { EventModule } from './event/event.module';
 import { TelegramModule } from './telegram/telegram.module';
 import { UserModule } from './user/user.module';
+import { EventImageModule } from './event-image/event-image.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { UserModule } from './user/user.module';
     EventModule,
     AdminModule,
     AuthModule,
+    EventImageModule,
   ],
   controllers: [AppController],
 })

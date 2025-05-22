@@ -8,8 +8,10 @@ datasource db {
 }
 
 model Admin {
-  id       String @id @default(uuid())
-  username String @unique
+  id       String  @id @default(uuid())
+  username String?
+
+  login    String @unique
   password String
 
   rights AdminRole[] @default([PART])

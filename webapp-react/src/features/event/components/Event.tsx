@@ -23,7 +23,7 @@ export default function Event({ event, refetchEvent }: EventPageProps) {
       <img
         src={
           event.image
-            ? event.image?.path
+            ? `${import.meta.env.VITE_BACKEND_URL}/${event.image?.path}`
             : "https://web3.avolites.com/Portals/0/news/2016%20v2/Jewel/5.21_The%20Chainsmokers_JEWEL%20Grand%20Opening_Photo%20Credit%20Al%20Powers%206.jpg?ver=2016-08-05-114212-697"
         }
         alt={event.title}

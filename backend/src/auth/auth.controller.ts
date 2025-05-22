@@ -9,14 +9,21 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
+import {
+  ApiBody,
+  ApiCookieAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import { AdminService } from '../admin/admin.service';
 import { getClientIp } from '../utils/get-current-user-ip';
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto/Auth.dto';
 import { RefreshTokenService } from './refresh-token.service';
-// import { Recaptcha } from '@nestlab/google-recaptcha'
 
+@ApiTags('Auth')
 @Controller()
 export class AuthController {
   constructor(
@@ -27,15 +34,20 @@ export class AuthController {
 
   @UsePipes(new ValidationPipe())
   @HttpCode(200)
-  // @Recaptcha()
   @Post('auth/login')
+  @ApiOperation({ summary: 'Логин администратора' })
+  @ApiBody({ type: AuthDto })
+  @ApiResponse({
+    status: 200,
+    description: 'Успешный вход. Устанавливаются JWT куки.',
+  })
   async login(
     @Body() dto: AuthDto,
     @Res({ passthrough: true }) res: Response,
     @Req() req: Request,
   ) {
     const ipAddress = getClientIp(req);
-    const { user, tokens } = await this.authService.login(dto, ipAddress);
+    const { admin, tokens } = await this.authService.login(dto, ipAddress);
 
     this.refreshTokenService.addAccessTokenToResponse(res, tokens.accessToken);
     this.refreshTokenService.addRefreshTokenToResponse(
@@ -43,11 +55,17 @@ export class AuthController {
       tokens.refreshToken,
     );
 
-    return { user };
+    return { admin };
   }
 
   @HttpCode(200)
   @Post('auth/access-token')
+  @ApiOperation({ summary: 'Обновить Access Token по Refresh Token (из куки)' })
+  @ApiCookieAuth('refreshToken')
+  @ApiResponse({
+    status: 200,
+    description: 'Новый access и refresh токен выданы',
+  })
   async getNewTokens(
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
@@ -60,7 +78,7 @@ export class AuthController {
       throw new UnauthorizedException('Refresh token not passed');
     }
 
-    const { user, tokens } = await this.authService.getNewTokens(
+    const { admin, tokens } = await this.authService.getNewTokens(
       refreshTokenFromCookies,
     );
 
@@ -70,14 +88,15 @@ export class AuthController {
       tokens.refreshToken,
     );
 
-    return { user };
+    return { admin };
   }
 
   @HttpCode(200)
   @Post('auth/logout')
+  @ApiOperation({ summary: 'Выход администратора' })
+  @ApiResponse({ status: 200, description: 'JWT токены удалены из куки' })
   async logout(@Res({ passthrough: true }) res: Response) {
     this.refreshTokenService.removeTokensFromResponse(res);
-
     return true;
   }
 }

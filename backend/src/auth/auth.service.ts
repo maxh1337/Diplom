@@ -19,7 +19,7 @@ export class AuthService {
   private readonly TOKEN_EXPIRATION_REFRESH = '1d';
 
   async login(dto: AuthDto, ipAddress: string) {
-    const user = await this.validateUser(dto);
+    const admin = await this.validateAdmin(dto);
     console.log(ipAddress);
 
     // const { encrypted: ipEncrypted, iv: ipIv } = encrypt(ipAddress);
@@ -48,7 +48,7 @@ export class AuthService {
     //   },
     // });
 
-    return this.buildResponseObject(user);
+    return this.buildResponseObject(admin);
   }
 
   // async cleanupOldLogs() {
@@ -81,11 +81,11 @@ export class AuthService {
 
   async buildResponseObject(admin: Admin) {
     const tokens = await this.issueTokens(admin.id, admin.rights || []);
-    return { user: this.omitPassword(admin), tokens };
+    return { admin: this.omitPassword(admin), tokens };
   }
 
-  private async issueTokens(userId: string, rights: AdminRole[]) {
-    const payload = { id: userId, rights };
+  private async issueTokens(adminId: string, rights: AdminRole[]) {
+    const payload = { id: adminId, rights };
     const accessToken = this.jwt.sign(payload, {
       expiresIn: this.TOKEN_EXPIRATION_ACCESS,
     });
@@ -95,16 +95,16 @@ export class AuthService {
     return { accessToken, refreshToken };
   }
 
-  private async validateUser(dto: AuthDto) {
-    const user = await this.adminService.getByUsername(dto.username);
-    if (!user) {
-      throw new UnauthorizedException('Username or password invalid');
+  private async validateAdmin(dto: AuthDto) {
+    const admin = await this.adminService.getByLogin(dto.login);
+    if (!admin) {
+      throw new UnauthorizedException('Login or password invalid');
     }
-    const isValid = await verify(user.password, dto.password);
+    const isValid = await verify(admin.password, dto.password);
     if (!isValid) {
       throw new UnauthorizedException('Email or password invalid');
     }
-    return user;
+    return admin;
   }
 
   private omitPassword(admin: Admin) {
