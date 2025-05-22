@@ -13,7 +13,8 @@
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:prod": "node dist/main",
-    "ngrok": "ngrok http 4200"
+    "ngrok": "ngrok http 4200",
+    "db:push-prod": "dotenv -e .env.production prisma db push && ts-node ./prisma/seed.ts"
   },
   "dependencies": {
     "@nestjs/common": "^11.1.1",
