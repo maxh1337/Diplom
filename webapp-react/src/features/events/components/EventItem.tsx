@@ -1,18 +1,20 @@
+import { useNavigate } from "react-router-dom";
 import { twMerge } from "tailwind-merge";
 import type { IEvent } from "../../../lib/modules/event/event.types";
 import EventHashtag from "./EventHashtag";
 
 interface EventItemProps {
   event: IEvent;
-  open: () => void;
 }
 
-export default function EventItem({ event, open }: EventItemProps) {
+export default function EventItem({ event }: EventItemProps) {
+  const navigate = useNavigate();
+
   return (
     <div
       className={twMerge("flex gap-4 mt-5 p-3 bg-secondary rounded-lg ")}
       onClick={() => {
-        open();
+        navigate(`/event/${event.id}`);
       }}
     >
       <img

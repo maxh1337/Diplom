@@ -1,6 +1,7 @@
 import { type RouteObject } from "react-router-dom";
 import Layout from "../components/Layout";
 import ChatbotPage from "../pages/ChatbotPage";
+import EventPage from "../pages/EventPage";
 import EventsPage from "../pages/EventsPage";
 import HomePage from "../pages/HomePage";
 import LeaveFeedback from "../pages/LeaveFeedback";
@@ -28,6 +29,10 @@ export const routes: RouteObject[] = [
       {
         element: <ProtectedRoute />,
         children: [{ path: "/leave-feedback", element: <LeaveFeedback /> }],
+      },
+      {
+        element: <ProtectedRoute />,
+        children: [{ path: "/event/:id", element: <EventPage /> }],
       },
       { path: "*", element: <NotFoundPage /> },
     ],

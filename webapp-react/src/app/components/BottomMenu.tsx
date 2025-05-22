@@ -3,14 +3,29 @@ import {
   HomeIcon,
   UserIcon,
 } from "@heroicons/react/24/outline";
+import { useEffect } from "react";
 import { MdEvent } from "react-icons/md";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import { useSplashScreenZustand } from "../../shared/hooks/useSplashScreenZustand";
 import { useUserZustand } from "../../shared/hooks/useUserZustand";
+import { ROUTES_WITH_BACK_BUTTON } from "../config/TgBackButtonManager";
 
 export default function BottomMenu() {
   const { user } = useUserZustand();
-  const { isVisible } = useSplashScreenZustand();
+  const { isVisible, setIsVisible } = useSplashScreenZustand();
+  const location = useLocation();
+
+  useEffect(() => {
+    const shouldShowBottomMenu = ROUTES_WITH_BACK_BUTTON.some((path) =>
+      location.pathname.startsWith(path)
+    );
+
+    if (!shouldShowBottomMenu) {
+      setIsVisible(false);
+    } else {
+      setIsVisible(true);
+    }
+  }, [location.pathname]);
 
   const menuItems = [
     {

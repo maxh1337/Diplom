@@ -43,15 +43,6 @@ export default function LeaveFeedback() {
 
   return (
     <div className="text-white font-brain p-6 max-w-lg mx-auto w-full">
-      <button
-        type="button"
-        onClick={() => navigate(-1)}
-        className={twMerge(
-          "text-sm underline mb-4 text-fourth hover:text-white transition-colors"
-        )}
-      >
-        ← Назад
-      </button>
       <h1 className="text-2xl mb-4 text-center font-geist-mono">
         Оставить отзыв
       </h1>

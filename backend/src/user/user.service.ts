@@ -24,6 +24,25 @@ export class UserService {
         events: {
           select: {
             id: true,
+            title: true,
+            image: true,
+            description: true,
+            participants: {
+              select: {
+                id: true,
+              },
+            },
+            feedback: {
+              select: {
+                id: true,
+                userId: true,
+                rating: true,
+                comment: true,
+              },
+            },
+            eventDate: true,
+            eventTime: true,
+            hashTags: true,
             isActive: true,
           },
         },

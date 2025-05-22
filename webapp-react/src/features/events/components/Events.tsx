@@ -1,6 +1,6 @@
 import type { IEvent } from "../../../lib/modules/event/event.types";
-import Event from "./Event";
-import EventItemSkeleton from "./skeletons/EventItemSkeleton";
+import EventItem from "./EventItem";
+import EventItemSkeleton from "./EventItemSkeleton";
 
 interface EventsProps {
   events: IEvent[] | undefined;
@@ -8,6 +8,7 @@ interface EventsProps {
 }
 
 export default function Events({ events, isEventsLoading }: EventsProps) {
+  console.log(events);
   return (
     <div className="w-full">
       {isEventsLoading ? (
@@ -17,7 +18,7 @@ export default function Events({ events, isEventsLoading }: EventsProps) {
           ))}
         </div>
       ) : (
-        events?.map((event) => <Event eventId={event.id} key={event.id} />)
+        events?.map((event) => <EventItem event={event} key={event.id} />)
       )}
     </div>
   );
