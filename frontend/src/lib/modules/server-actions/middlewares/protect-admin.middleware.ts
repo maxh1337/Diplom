@@ -1,76 +1,79 @@
 "use server";
 
-import { NextResponse, type NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { PUBLIC_PAGES } from "../../../../shared/config/pages/public.config";
 import { AuthToken, CookieSettings } from "../../auth/auth.types";
 import { getTokensFromRequest } from "../utils/get-tokens-from-request";
 import { jwtVerifyServer } from "../utils/jwt-verify";
-import { redirectToLoginOrNotFound } from "../utils/redirect-to-login-or-404";
+import { nextRedirect } from "../utils/next-redirect";
+import { COOKIE_DOMAIN } from "../../../constants/cookie-domain";
 
 export async function protectAdminPages(request: NextRequest) {
   const { tokens, response } = await getTokensFromRequest(request);
 
   if (!tokens) {
-    return redirectWithCookies(request, response);
+    const redirectResponse = nextRedirect(PUBLIC_PAGES.LOGIN, request.url);
+    response.cookies.getAll().forEach((cookie) => {
+      redirectResponse.cookies.set({
+        name: cookie.name,
+        value: cookie.value,
+        httpOnly: CookieSettings.HTTP_ONLY,
+        secure: CookieSettings.SECURE,
+        domain: COOKIE_DOMAIN,
+        sameSite: CookieSettings.SAME_SITE,
+        path: CookieSettings.PATH,
+        maxAge:
+          cookie.name === AuthToken.ACCESS_TOKEN
+            ? CookieSettings.ACCESS_TOKEN_MAX_AGE
+            : CookieSettings.REFRESH_TOKEN_MAX_AGE,
+      });
+    });
+    return redirectResponse;
   }
 
   const verifiedData = await jwtVerifyServer(tokens.accessToken);
-  if (!verifiedData) {
-    return redirectWithCookies(request, response);
+
+  if (!verifiedData || typeof verifiedData !== "object" || !verifiedData.id) {
+    const redirectResponse = nextRedirect(PUBLIC_PAGES.LOGIN, request.url);
+    response.cookies.getAll().forEach((cookie) => {
+      redirectResponse.cookies.set({
+        name: cookie.name,
+        value: cookie.value,
+        httpOnly: CookieSettings.HTTP_ONLY,
+        secure: CookieSettings.SECURE,
+        domain: COOKIE_DOMAIN,
+        sameSite: CookieSettings.SAME_SITE,
+        path: CookieSettings.PATH,
+        maxAge:
+          cookie.name === AuthToken.ACCESS_TOKEN
+            ? CookieSettings.ACCESS_TOKEN_MAX_AGE
+            : CookieSettings.REFRESH_TOKEN_MAX_AGE,
+      });
+    });
+    return redirectResponse;
   }
 
-  // Продление токенов
-  response.cookies.set({
+  const nextResponse = NextResponse.next();
+  nextResponse.cookies.set({
     name: AuthToken.ACCESS_TOKEN,
     value: tokens.accessToken,
     httpOnly: CookieSettings.HTTP_ONLY,
     secure: CookieSettings.SECURE,
+    domain: COOKIE_DOMAIN,
     sameSite: CookieSettings.SAME_SITE,
     path: CookieSettings.PATH,
     maxAge: CookieSettings.ACCESS_TOKEN_MAX_AGE,
   });
-
-  response.cookies.set({
+  nextResponse.cookies.set({
     name: AuthToken.REFRESH_TOKEN,
     value: tokens.refreshToken,
     httpOnly: CookieSettings.HTTP_ONLY,
     secure: CookieSettings.SECURE,
+    domain: COOKIE_DOMAIN,
     sameSite: CookieSettings.SAME_SITE,
     path: CookieSettings.PATH,
     maxAge: CookieSettings.REFRESH_TOKEN_MAX_AGE,
   });
 
-  return response;
-}
-
-function redirectWithCookies(request: NextRequest, response: NextResponse) {
-  const redirectResponse = redirectToLoginOrNotFound(request);
-
-  const accessTokenCookie = response.cookies.get(AuthToken.ACCESS_TOKEN);
-  const refreshTokenCookie = response.cookies.get(AuthToken.REFRESH_TOKEN);
-
-  if (accessTokenCookie) {
-    redirectResponse.cookies.set({
-      name: AuthToken.ACCESS_TOKEN,
-      value: accessTokenCookie.value,
-      httpOnly: CookieSettings.HTTP_ONLY,
-      secure: CookieSettings.SECURE,
-      sameSite: CookieSettings.SAME_SITE,
-      path: CookieSettings.PATH,
-      maxAge: CookieSettings.ACCESS_TOKEN_MAX_AGE,
-    });
-  }
-
-  if (refreshTokenCookie) {
-    redirectResponse.cookies.set({
-      name: AuthToken.REFRESH_TOKEN,
-      value: refreshTokenCookie.value,
-      httpOnly: CookieSettings.HTTP_ONLY,
-      secure: CookieSettings.SECURE,
-      sameSite: CookieSettings.SAME_SITE,
-      path: CookieSettings.PATH,
-      maxAge: CookieSettings.REFRESH_TOKEN_MAX_AGE,
-    });
-  }
-
-  return redirectResponse;
+  return nextResponse;
 }

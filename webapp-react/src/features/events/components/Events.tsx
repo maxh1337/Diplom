@@ -10,7 +10,7 @@ interface EventsProps {
 export default function Events({ events, isEventsLoading }: EventsProps) {
   console.log(events);
   return (
-    <div className="w-full">
+    <div className="w-full flex flex-col">
       {isEventsLoading ? (
         <div className="space-y-4">
           {[...Array(3)].map((_, idx) => (

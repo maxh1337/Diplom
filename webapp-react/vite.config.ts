@@ -5,6 +5,9 @@ import { defineConfig } from "vite";
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   server: {
-    allowedHosts: ["wide-tigers-invite.loca.lt", "ya-budu.ru"],
+    allowedHosts: ["easy-wolves-work.loca.lt", "ya-budu.ru"],
+  },
+  preview: {
+    allowedHosts: ["ya-budu.ru"],
   },
 });

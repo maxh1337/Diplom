@@ -11,7 +11,8 @@ export const CookieSettings = {
   ACCESS_TOKEN_MAX_AGE: 60 * 60, // 1 час для accessToken
   REFRESH_TOKEN_MAX_AGE: 24 * 60 * 60, // 1 день для refreshToken
   HTTP_ONLY: true,
-  SECURE: process.env.NODE_ENV === "production",
+  // SECURE: process.env.NODE_ENV === "production",
+  SECURE: true,
   SAME_SITE:
     process.env.NODE_ENV === "production"
       ? ("lax" as const)

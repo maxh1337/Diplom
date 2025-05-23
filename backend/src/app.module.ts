@@ -6,10 +6,11 @@ import { AdminModule } from './admin/admin.module';
 import { AppController } from './app.controller';
 import { AuthModule } from './auth/auth.module';
 import { getGoogleRecaptchaConfig } from './config/google-recaptcha.config';
+import { EventImageModule } from './event-image/event-image.module';
 import { EventModule } from './event/event.module';
+import { SeedModule } from './seed/seed.module';
 import { TelegramModule } from './telegram/telegram.module';
 import { UserModule } from './user/user.module';
-import { EventImageModule } from './event-image/event-image.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { EventImageModule } from './event-image/event-image.module';
     AdminModule,
     AuthModule,
     EventImageModule,
+    SeedModule,
   ],
   controllers: [AppController],
 })

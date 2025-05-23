@@ -19,7 +19,8 @@ services:
     container_name: backend
     env_file:
       - ./backend/.env.production
-      - ./backend/.env.development
+    environment:
+      - NODE_ENV=production
     volumes:
       - ./backend/uploads:/app/uploads:rw
     networks:
@@ -37,8 +38,9 @@ services:
       dockerfile: Dockerfile
     container_name: frontend
     env_file:
-      - ./frontend/.env.development
       - ./frontend/.env.production
+    environment:
+      - NODE_ENV=production
     networks:
       - dev-network
     depends_on:
@@ -47,12 +49,11 @@ services:
 
   webapp:
     build:
-      context: ./webapp
+      context: ./webapp-react
       dockerfile: Dockerfile
     container_name: webapp
     env_file:
-      - ./webapp/.env.development
-      - ./webapp/.env.production
+      - ./webapp-react/.env.production
     networks:
       - dev-network
     depends_on:

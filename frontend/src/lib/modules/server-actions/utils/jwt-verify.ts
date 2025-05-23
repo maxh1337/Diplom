@@ -11,7 +11,7 @@ export async function jwtVerifyServer(accessToken: string) {
       new TextEncoder().encode(`${process.env.JWT_SECRET}`)
     );
 
-    if (!payload) return null;
+    if (!payload || !payload.id) return null;
 
     return transformAdminToState(payload);
   } catch (error) {

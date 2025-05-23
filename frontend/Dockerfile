@@ -5,8 +5,8 @@ WORKDIR /app
 # Установка pnpm
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
-COPY package.json yarn.lock ./
-RUN yarn install --frozen-lockfile
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
 COPY . .
 
 # Set a build-time environment variable
@@ -22,7 +22,7 @@ WORKDIR /app
 # Установка pnpm
 RUN corepack enable && corepack prepare pnpm@latest --activate
 
-COPY --from=builder /app/next.config.js ./
+COPY --from=builder /app/next.config.ts ./
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/node_modules ./node_modules

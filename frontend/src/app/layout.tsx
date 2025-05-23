@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Header from "../shared/components/sections/Header";
 import { Sidebar } from "../shared/components/sections/Sidebar";
 import ClientInitialize from "./ClientInitialize";
 import "./globals.css";
@@ -20,12 +21,17 @@ export default function RootLayout({
         name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1"
       />
-      <body className="bg-black text-white">
+      <body className="bg-black text-white h-screen">
         <Providers>
           <ClientInitialize />
-          <div className="flex min-h-screen">
+          <div className="flex min-h-full">
             <Sidebar />
-            <main className="flex-1 px-12 py-8 overflow-auto">{children}</main>
+            <div className="flex-1 flex flex-col">
+              <Header />
+              <main className="flex px-12 pb-18 pt-4 overflow-auto h-full w-full justify-center">
+                {children}
+              </main>
+            </div>
           </div>
         </Providers>
       </body>

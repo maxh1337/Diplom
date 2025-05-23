@@ -26,7 +26,7 @@ export default function EventsPage() {
     <section className="w-full flex flex-col items-center h-full pt-5 text-white ">
       <h1 className="text-white font-brain text-xl w-full">Мероприятия</h1>
       <EventsSearch />
-      <div className=" pb-17">
+      <div className="w-full pb-17">
         <Events events={events} isEventsLoading={isEventsLoading} />
       </div>
     </section>

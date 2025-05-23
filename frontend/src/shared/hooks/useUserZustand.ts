@@ -32,7 +32,6 @@ export const useUserZustand = create<UserStateZustand>((set) => ({
       if (error?.status === 401) {
         try {
           await authService.getNewTokens();
-
           const profileRes = await adminService.fetchProfile();
           const profile = profileRes?.data ?? null;
           const userState = profile ? transformAdminToState(profile) : null;

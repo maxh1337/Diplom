@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-
 import { protectAdminPages } from "./lib/modules/server-actions/middlewares/protect-admin.middleware";
 import { protectLoginPages } from "./lib/modules/server-actions/middlewares/protect-login.middleware";
 import { ADMIN_PAGES } from "./shared/config/pages/admin.config";
@@ -18,7 +17,3 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
 
   return NextResponse.next();
 }
-
-export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
-};

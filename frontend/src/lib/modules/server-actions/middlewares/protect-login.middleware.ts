@@ -6,12 +6,14 @@ import { AuthToken, CookieSettings } from "../../auth/auth.types";
 import { getTokensFromRequest } from "../utils/get-tokens-from-request";
 import { jwtVerifyServer } from "../utils/jwt-verify";
 import { nextRedirect } from "../utils/next-redirect";
+import { COOKIE_DOMAIN } from "../../../constants/cookie-domain";
 
 export async function protectLoginPages(request: NextRequest) {
   const { tokens, response } = await getTokensFromRequest(request);
   if (!tokens) return response;
 
   const verifiedData = await jwtVerifyServer(tokens.accessToken);
+
   if (!verifiedData) return response;
 
   // Авторизован — редирект на /dashboard
@@ -26,6 +28,7 @@ export async function protectLoginPages(request: NextRequest) {
       value: accessTokenCookie.value,
       httpOnly: CookieSettings.HTTP_ONLY,
       secure: CookieSettings.SECURE,
+      domain: COOKIE_DOMAIN,
       sameSite: CookieSettings.SAME_SITE,
       path: CookieSettings.PATH,
       maxAge: CookieSettings.ACCESS_TOKEN_MAX_AGE,
@@ -38,6 +41,7 @@ export async function protectLoginPages(request: NextRequest) {
       value: refreshTokenCookie.value,
       httpOnly: CookieSettings.HTTP_ONLY,
       secure: CookieSettings.SECURE,
+      domain: COOKIE_DOMAIN,
       sameSite: CookieSettings.SAME_SITE,
       path: CookieSettings.PATH,
       maxAge: CookieSettings.REFRESH_TOKEN_MAX_AGE,

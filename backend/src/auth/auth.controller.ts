@@ -16,6 +16,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { Recaptcha } from '@nestlab/google-recaptcha';
 import { Request, Response } from 'express';
 import { AdminService } from '../admin/admin.service';
 import { getClientIp } from '../utils/get-current-user-ip';
@@ -41,6 +42,7 @@ export class AuthController {
     status: 200,
     description: 'Успешный вход. Устанавливаются JWT куки.',
   })
+  @Recaptcha()
   async login(
     @Body() dto: AuthDto,
     @Res({ passthrough: true }) res: Response,

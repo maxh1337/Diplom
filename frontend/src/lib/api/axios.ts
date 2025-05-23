@@ -1,6 +1,7 @@
 import axios, { CreateAxiosDefaults } from "axios";
 import { API_URL } from "../constants/urls";
 
+import authService from "../modules/auth/auth.service";
 import { errorCatch, getContentType } from "./api.helper";
 
 const axiosOptions: CreateAxiosDefaults = {
@@ -12,6 +13,7 @@ const axiosOptions: CreateAxiosDefaults = {
 export const axiosClassic = axios.create(axiosOptions);
 
 export const instance = axios.create(axiosOptions);
+console.log(API_URL, "API URL");
 
 instance.interceptors.response.use(
   (config) => config,

@@ -15,8 +15,9 @@ async function bootstrap() {
       'http://localhost:3000',
       'http://localhost:5173',
       'https://webapp-react-khaki.vercel.app',
-      'https://wide-tigers-invite.loca.lt',
+      'https://easy-wolves-work.loca.lt',
       'https://ya-budu.ru',
+      'https://ya-budu.ru/web-app',
     ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
     credentials: true,
@@ -26,6 +27,7 @@ async function bootstrap() {
       'ngrok-skip-browser-warning',
       'Authorization',
       'x-init-data',
+      'Recaptcha',
     ],
   });
 

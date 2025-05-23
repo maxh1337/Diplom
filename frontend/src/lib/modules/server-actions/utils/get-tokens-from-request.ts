@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { COOKIE_DOMAIN } from "../../../constants/cookie-domain";
 import { AuthToken, CookieSettings } from "../../auth/auth.types";
 import { getNewTokensByRefresh } from "./get-new-tokens-by-refresh";
 
@@ -26,10 +27,10 @@ export async function getTokensFromRequest(request: NextRequest) {
         response,
       };
     } catch (error) {
+      console.error("Error refreshing tokens:", error);
       const response = NextResponse.next();
       response.cookies.delete(AuthToken.ACCESS_TOKEN);
       response.cookies.delete(AuthToken.REFRESH_TOKEN);
-      console.error("Error refreshing tokens:", error);
       return { tokens: null, response };
     }
   }
@@ -40,6 +41,7 @@ export async function getTokensFromRequest(request: NextRequest) {
     value: accessToken,
     httpOnly: CookieSettings.HTTP_ONLY,
     secure: CookieSettings.SECURE,
+    domain: COOKIE_DOMAIN,
     sameSite: CookieSettings.SAME_SITE,
     path: CookieSettings.PATH,
     maxAge: CookieSettings.ACCESS_TOKEN_MAX_AGE,
@@ -49,6 +51,7 @@ export async function getTokensFromRequest(request: NextRequest) {
     value: refreshToken,
     httpOnly: CookieSettings.HTTP_ONLY,
     secure: CookieSettings.SECURE,
+    domain: COOKIE_DOMAIN,
     sameSite: CookieSettings.SAME_SITE,
     path: CookieSettings.PATH,
     maxAge: CookieSettings.REFRESH_TOKEN_MAX_AGE,

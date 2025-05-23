@@ -1,6 +1,7 @@
 "use server";
 
 import { NextResponse } from "next/server";
+import { COOKIE_DOMAIN } from "../../../constants/cookie-domain";
 import { API_URL } from "../../../constants/urls";
 import { IAdmin } from "../../admin/admin.types";
 import { AuthToken, CookieSettings } from "../../auth/auth.types";
@@ -20,7 +21,7 @@ export async function getNewTokensByRefresh(refreshToken: string) {
   });
 
   if (!response.ok) {
-    throw new Error("Failed to fetch new tokens");
+    throw new Error(`Failed to fetch new tokens: ${response.statusText}`);
   }
 
   const data: IAuthResponse = await response.json();
@@ -41,17 +42,17 @@ export async function getNewTokensByRefresh(refreshToken: string) {
     }
   }
 
-  if (!accessToken) {
-    throw new Error("No access token received");
+  if (!accessToken || !newRefreshToken) {
+    throw new Error("No valid tokens received from API");
   }
 
-  // Создаем ответ с новыми cookies
   const nextResponse = NextResponse.json(data);
   nextResponse.cookies.set({
     name: AuthToken.ACCESS_TOKEN,
     value: accessToken,
     httpOnly: CookieSettings.HTTP_ONLY,
     secure: CookieSettings.SECURE,
+    domain: COOKIE_DOMAIN,
     sameSite: CookieSettings.SAME_SITE,
     path: CookieSettings.PATH,
     maxAge: CookieSettings.ACCESS_TOKEN_MAX_AGE,
@@ -61,6 +62,7 @@ export async function getNewTokensByRefresh(refreshToken: string) {
     value: newRefreshToken,
     httpOnly: CookieSettings.HTTP_ONLY,
     secure: CookieSettings.SECURE,
+    domain: COOKIE_DOMAIN,
     sameSite: CookieSettings.SAME_SITE,
     path: CookieSettings.PATH,
     maxAge: CookieSettings.REFRESH_TOKEN_MAX_AGE,

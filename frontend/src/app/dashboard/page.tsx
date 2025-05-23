@@ -1,9 +1,14 @@
-import type { Metadata } from "next";
+import { Metadata } from "next";
+import Statistics from "../../features/dashboard/components/Statistics";
 
 export const metadata: Metadata = {
-  title: "Profile",
+  title: "Dashboard - Statistics",
 };
 
 export default function Page() {
-  return <div>Dashboard</div>;
+  return (
+    <div className="w-full">
+      <Statistics />
+    </div>
+  );
 }

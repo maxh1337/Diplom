@@ -3,14 +3,17 @@ FROM node:23.11.1-alpine
 
 WORKDIR /app
 
+# Копируем .env.production
+COPY .env.production ./
+
 # Копируем package.json и yarn.lock
 COPY package.json yarn.lock ./
 
 # Устанавливаем зависимости
 RUN yarn install
 
-# Устанавливаем dotenv-cli глобально
-RUN yarn global add dotenv-cli
+# Устанавливаем dotenvx глобально
+RUN yarn global add @dotenvx/dotenvx
 
 # Копируем весь исходный код
 COPY . .
