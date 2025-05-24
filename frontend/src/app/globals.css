@@ -2,7 +2,6 @@
 @import '@fontsource/geist-sans';
 @import '@fontsource/geist-mono';
 @import '@fontsource/jetbrains-mono';
-
 @import '@fontsource/press-start-2p';
 
 @theme {
@@ -35,4 +34,36 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
   outline: none;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(100%) scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    opacity: 1;
+    transform: translateX(0) scale(10);
+  }
+
+  to {
+    opacity: 0;
+    transform: translateX(100%) scale(0.9);
+  }
+}
+
+.event-details-enter {
+  animation: slideIn 0.5s ease-out forwards;
+}
+
+.event-details-exit {
+  animation: slideOut 0.5s ease-in forwards;
 }

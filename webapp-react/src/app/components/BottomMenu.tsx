@@ -6,21 +6,18 @@ import {
 import { useEffect } from "react";
 import { MdEvent } from "react-icons/md";
 import { NavLink, useLocation } from "react-router-dom";
-import { useSplashScreenZustand } from "../../shared/hooks/useSplashScreenZustand";
+import { useShowBottomMenu } from "../../shared/hooks/useShowBottomMenu";
 import { useUserZustand } from "../../shared/hooks/useUserZustand";
-import { ROUTES_WITH_BACK_BUTTON } from "../config/TgBackButtonManager";
 
 export default function BottomMenu() {
   const { user } = useUserZustand();
-  const { isVisible, setIsVisible } = useSplashScreenZustand();
+  const { isVisible, setIsVisible } = useShowBottomMenu();
   const location = useLocation();
 
   useEffect(() => {
-    const shouldShowBottomMenu = ROUTES_WITH_BACK_BUTTON.some((path) =>
-      location.pathname.startsWith(path)
-    );
+    const shouldHideBottomMenu = location.pathname.startsWith("/event/");
 
-    if (!shouldShowBottomMenu) {
+    if (shouldHideBottomMenu === true) {
       setIsVisible(false);
     } else {
       setIsVisible(true);
@@ -53,7 +50,7 @@ export default function BottomMenu() {
       item.name !== "Profile" || (item.name === "Profile" && user?.nickname)
   );
 
-  if (isVisible) {
+  if (!isVisible) {
     return null;
   }
 

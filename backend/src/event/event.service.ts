@@ -338,7 +338,7 @@ export class EventService {
           isActive: isActive,
         };
 
-    let events = await this.prisma.event.findMany({
+    const events = await this.prisma.event.findMany({
       where,
       include: {
         participants: {
@@ -359,20 +359,14 @@ export class EventService {
           select: {
             id: true,
             username: true,
+            login: true,
           },
         },
         image: true,
       },
+      orderBy: [{ isActive: 'desc' }, { eventDate: 'asc' }],
+      ...(latest && { take: 3 }),
     });
-
-    if (latest) {
-      events = events
-        .sort(
-          (a, b) =>
-            new Date(b.eventDate).getTime() - new Date(a.eventDate).getTime(),
-        )
-        .slice(0, 3);
-    }
 
     return events;
   }

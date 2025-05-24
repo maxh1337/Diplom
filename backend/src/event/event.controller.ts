@@ -41,6 +41,7 @@ export class EventController {
     required: true,
     example: 'query_id=A...&user=%7B%22id%22%3A1234...%7D',
   })
+  @UsePipes(new ValidationPipe())
   @ApiResponse({ status: 200, description: 'Список событий успешно получен' })
   async getAll(@Query() dto: EventFilters) {
     return this.eventService.getEvents(dto);

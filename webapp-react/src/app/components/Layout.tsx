@@ -1,11 +1,19 @@
-import { Outlet } from "react-router-dom";
+import { useEffect } from "react";
+import { Outlet, useLocation } from "react-router-dom";
 import { useShowBottomMenu } from "../../shared/hooks/useShowBottomMenu";
 import { Providers } from "../config/Providers";
-import BottomMenu from "./BottomMenu";
 import BackButtonManager from "../config/TgBackButtonManager";
+import BottomMenu from "./BottomMenu";
 
 export default function Layout() {
-  const { isVisible } = useShowBottomMenu();
+  const { isVisible, setIsVisible } = useShowBottomMenu();
+  const pathname = useLocation().pathname;
+
+  useEffect(() => {
+    if (pathname === "/") setIsVisible(true);
+    if (pathname === "/events") setIsVisible(true);
+    if (pathname === "/profile") setIsVisible(true);
+  }, [pathname]);
 
   return (
     <Providers>

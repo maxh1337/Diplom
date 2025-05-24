@@ -40,6 +40,8 @@ export class SeedService {
   }
 
   async SeedEvents(adminId: string) {
+    await this.prisma.event.deleteMany({ where: { adminId } });
+
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     const tomorrow = new Date(today);

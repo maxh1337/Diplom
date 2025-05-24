@@ -11,11 +11,13 @@ export default function HomePage() {
 
   const handleSplashComplete = () => {
     if (!isLoading) {
-      setIsVisible(false);
+      setTimeout(() => {
+        setIsVisible(false);
+      }, 4000);
     }
   };
 
-  if (isVisible) {
+  if (isVisible && !user) {
     return <SplashScreen onComplete={handleSplashComplete} />;
   }
 

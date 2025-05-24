@@ -81,7 +81,7 @@ export class AdminController {
     return await this.adminService.updateAdminProfile(adminId, dto);
   }
 
-  @Post('event/create')
+  @Post('/event/create')
   @Auth()
   @HttpCode(201)
   @UsePipes(new ValidationPipe({ transform: true }))
@@ -123,9 +123,10 @@ export class AdminController {
   })
   @ApiQuery({ name: 'isActive', required: false, example: true })
   @Get('/event/get-all')
-  @UsePipes(new ValidationPipe())
+  @UsePipes(new ValidationPipe({ transform: true }))
   @Auth()
   async getAll(@Query() dto: AdminEventFilters) {
+    console.log(dto);
     return this.eventService.getEventsAdmin(dto);
   }
 

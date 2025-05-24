@@ -1,4 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
 import {
   IsArray,
   IsBoolean,
@@ -32,6 +33,17 @@ export class EventFilters {
   })
   @IsOptional()
   @IsArray()
+  @Transform(({ value }) => {
+    if (typeof value === 'string') {
+      return [value];
+    }
+
+    if (Array.isArray(value)) {
+      return value;
+    }
+
+    return [];
+  })
   @IsString({ each: true })
   hashTags: string[];
 }

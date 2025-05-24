@@ -34,3 +34,10 @@ export interface IFeedback {
   user: IUser;
   userId: string;
 }
+
+export interface IEventFilters {
+  title?: string;
+  latest?: boolean;
+  hashTags?: string[];
+  isActive?: boolean;
+}

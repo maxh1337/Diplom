@@ -15,7 +15,7 @@ async function bootstrap() {
       'http://localhost:3000',
       'http://localhost:5173',
       'https://webapp-react-khaki.vercel.app',
-      'https://easy-wolves-work.loca.lt',
+      'https://pink-rice-grin.loca.lt',
       'https://ya-budu.ru',
       'https://ya-budu.ru/web-app',
     ],
