@@ -22,10 +22,6 @@ class EventsService {
     });
   }
 
-  async getById(id: string): Promise<AxiosResponse<IEvent>> {
-    return instance.get<IEvent>(`${this._BASE_URL}/${id}`);
-  }
-
   async updateEvent(
     id: string,
     data: FormData
@@ -37,6 +33,10 @@ class EventsService {
     });
   }
 
+  async getById(id: string): Promise<AxiosResponse<IEvent>> {
+    return instance.get<IEvent>(`${this._BASE_URL}/${id}`);
+  }
+
   async deleteEvent(id: string): Promise<AxiosResponse<void>> {
     return instance.delete<void>(`${this._BASE_URL}/delete/${id}`);
   }
@@ -46,6 +46,11 @@ class EventsService {
     userId: string
   ): Promise<AxiosResponse<void>> {
     return instance.delete<void>(`${this._BASE_URL}/${eventId}/kick/${userId}`);
+  }
+
+  async exportEventToDocx(id: string): Promise<{ path: string }> {
+    const response = await instance.get(`${this._BASE_URL}/export/${id}`);
+    return response.data;
   }
 }
 

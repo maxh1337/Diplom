@@ -8,6 +8,20 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { Cron, CronExpression } from '@nestjs/schedule';
 import { Prisma } from '@prisma/client';
+import {
+  AlignmentType,
+  Document,
+  HeadingLevel,
+  Packer,
+  Paragraph,
+  Table,
+  TableCell,
+  TableRow,
+  TextRun,
+  WidthType,
+} from 'docx';
+import { promises as fs } from 'fs';
+import { join } from 'path';
 import { AdminEventFilters } from '../admin/dto/admin-event-filters.dto';
 import { EventImageService } from '../event-image/event-image.service';
 import { PrismaService } from '../prisma.service';
@@ -372,17 +386,46 @@ export class EventService {
   }
 
   async delete(eventId: string) {
-    const event = await this.prisma.event.findUnique({
-      where: { id: eventId },
-    });
+    try {
+      const event = await this.prisma.event.findUnique({
+        where: { id: eventId },
+        include: { image: true }, // Включаем связанное изображение
+      });
 
-    if (!event) {
-      throw new NotFoundException('Событие не найдено');
+      if (!event) {
+        throw new NotFoundException('Событие не найдено');
+      }
+
+      // Найти связанное изображение
+      const existingImage = event.image;
+
+      if (existingImage) {
+        // Удаляем запись об изображении из базы данных
+        await this.prisma.eventImage.delete({
+          where: { id: existingImage.id },
+        });
+
+        // Удаляем файл изображения из папки, если он существует
+        const imagePath = join(process.cwd(), existingImage.path);
+        await fs.rm(imagePath, { force: true }).catch((err) => {
+          console.error(
+            `Ошибка при удалении файла изображения ${imagePath}:`,
+            err,
+          );
+          // Игнорируем ошибку, чтобы продолжить удаление события
+        });
+      }
+
+      // Удаляем само событие
+      await this.prisma.event.delete({
+        where: { id: eventId },
+      });
+
+      return { message: 'Событие успешно удалено' };
+    } catch (err) {
+      console.error('Ошибка при удалении события:', err);
+      throw err;
     }
-
-    return this.prisma.event.delete({
-      where: { id: eventId },
-    });
   }
 
   async getByIdAdmin(eventId: string) {
@@ -487,4 +530,214 @@ export class EventService {
   //
   //
   // Методы для создания документов и выгрузки
+  async exportEventToDocx(eventId: string): Promise<{ path: string }> {
+    this.logger.log(`Starting export for event ID: ${eventId}`);
+    const event = await this.prisma.event.findUnique({
+      where: { id: eventId },
+      include: {
+        participants: {
+          select: {
+            id: true,
+            nickname: true,
+            telegramId: true,
+            telegramUsername: true,
+            telegramFirstName: true,
+            telegramLastName: true,
+            userCategory: true,
+            yearOfBirth: true,
+            photoUrl: true,
+          },
+        },
+        feedback: true,
+        image: true,
+        administrator: {
+          select: { username: true },
+        },
+      },
+    });
+
+    if (!event) {
+      this.logger.error(`Event with ID ${eventId} not found`);
+      throw new NotFoundException('Событие не найдено');
+    }
+
+    // Создание документа
+    const doc = new Document({
+      sections: [
+        {
+          properties: {},
+          children: [
+            // Заголовок
+            new Paragraph({
+              text: event.title,
+              heading: HeadingLevel.HEADING_1,
+              alignment: AlignmentType.CENTER,
+              spacing: { after: 200 },
+              children: [
+                new TextRun({
+                  size: 28,
+                  bold: true,
+                  color: '2F5496',
+                }),
+              ],
+            }),
+
+            // Информация о событии
+            new Paragraph({
+              children: [
+                new TextRun({
+                  text: `Описание: ${event.description || 'Нет описания'}`,
+                  size: 24,
+                  color: '000000',
+                }),
+                new TextRun({
+                  text: `Дата: ${event.eventDate.toLocaleDateString('ru-RU')} ${event.eventTime}`,
+                  break: 1,
+                  size: 24,
+                  color: '000000',
+                }),
+                new TextRun({
+                  text: `Администратор: ${event.administrator?.username || 'Не указан'}`,
+                  break: 1,
+                  size: 24,
+                  color: '000000',
+                }),
+                new TextRun({
+                  text: `Теги: ${event.hashTags.join(', ') || 'Нет тегов'}`,
+                  break: 1,
+                  size: 24,
+                  color: '000000',
+                }),
+              ],
+              spacing: { before: 200, after: 200 },
+            }),
+
+            // Участники
+            new Paragraph({
+              text:
+                event.participants.length > 0
+                  ? 'Участники:'
+                  : 'Участники: Нет зарегистрированных участников',
+              spacing: { before: 400, after: 200 },
+              children: [
+                new TextRun({
+                  size: 24,
+                  color: '000000',
+                }),
+              ],
+            }),
+
+            // Таблица участников (если есть)
+            ...(event.participants.length > 0
+              ? [
+                  new Table({
+                    width: { size: 100, type: WidthType.PERCENTAGE },
+                    rows: [
+                      new TableRow({
+                        children: [
+                          new TableCell({
+                            children: [new Paragraph('Никнейм/Юзернейм')],
+                            shading: { fill: 'D3D3D3' },
+                          }),
+                          new TableCell({
+                            children: [new Paragraph('Категория')],
+                            shading: { fill: 'D3D3D3' },
+                          }),
+                          new TableCell({
+                            children: [new Paragraph('Год рождения')],
+                            shading: { fill: 'D3D3D3' },
+                          }),
+                        ],
+                      }),
+                      ...event.participants.map(
+                        (participant) =>
+                          new TableRow({
+                            children: [
+                              new TableCell({
+                                children: [
+                                  new Paragraph(
+                                    participant.nickname ||
+                                      participant.telegramUsername ||
+                                      'Не указано',
+                                  ),
+                                ],
+                              }),
+                              new TableCell({
+                                children: [
+                                  new Paragraph(
+                                    participant.userCategory || 'Не указано',
+                                  ),
+                                ],
+                              }),
+                              new TableCell({
+                                children: [
+                                  new Paragraph(
+                                    participant.yearOfBirth?.toString() ||
+                                      'Не указано',
+                                  ),
+                                ],
+                              }),
+                            ],
+                          }),
+                      ),
+                    ],
+                  }),
+                ]
+              : []),
+
+            // Обратная связь
+            new Paragraph({
+              text:
+                event.feedback.length > 0
+                  ? 'Обратная связь:'
+                  : 'Обратная связь: Нет отзывов',
+              spacing: { before: 400, after: 200 },
+              children: [
+                new TextRun({
+                  size: 24,
+                  color: '000000',
+                }),
+              ],
+            }),
+
+            // Список обратной связи (если есть)
+            ...(event.feedback.length > 0
+              ? event.feedback.map(
+                  (feedback) =>
+                    new Paragraph({
+                      children: [
+                        new TextRun({
+                          text: `Оценка: ${feedback.rating}`,
+                          bold: true,
+                          size: 24,
+                          color: '000000',
+                        }),
+                        new TextRun({
+                          text: `, Комментарий: ${feedback.comment || 'Нет комментария'}`,
+                          break: 1,
+                          size: 24,
+                          color: '000000',
+                        }),
+                      ],
+                      spacing: { before: 100, after: 100 },
+                    }),
+                )
+              : []),
+          ],
+        },
+      ],
+    });
+
+    const buffer = await Packer.toBuffer(doc);
+
+    const uploadsDir = join(process.cwd(), 'uploads/exported-word');
+    await fs.mkdir(uploadsDir, { recursive: true });
+
+    const filename = `event-${eventId}.docx`;
+    const filePath = join(uploadsDir, filename);
+
+    await fs.writeFile(filePath, buffer);
+
+    return { path: `uploads/exported-word/${filename}` };
+  }
 }

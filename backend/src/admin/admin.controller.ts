@@ -28,6 +28,7 @@ import { CurrentAdmin } from '../auth/decorators/admin.decorator';
 import { Auth } from '../auth/decorators/auth.decorator';
 import { CreateEventDto } from '../event/dto/create-event.dto';
 import { EventService } from '../event/event.service';
+import { UserService } from '../user/user.service';
 import { AdminService } from './admin.service';
 import { AdminEventFilters } from './dto/admin-event-filters.dto';
 import { UpdateAdminFieldsDto } from './dto/update-admin.dto';
@@ -39,6 +40,7 @@ export class AdminController {
   constructor(
     private readonly eventService: EventService,
     private readonly adminService: AdminService,
+    private readonly userService: UserService,
   ) {}
 
   @ApiOperation({ summary: 'Получить профиль администратора' })
@@ -109,6 +111,7 @@ export class AdminController {
     @Body() dto: CreateEventDto,
     @UploadedFile() image?: Express.Multer.File,
   ) {
+    console.log(image);
     return this.eventService.create(adminId, dto, image);
   }
 
@@ -186,5 +189,23 @@ export class AdminController {
     @Param('userId') userId: string,
   ) {
     return this.eventService.deleteEventMember(eventId, userId);
+  }
+
+  @ApiOperation({ summary: 'Получить всех пользователей telegram' })
+  @Get('/user/get-all')
+  @Auth()
+  async getAllUsersAdmin() {
+    return this.userService.getAllUsersByAdmin();
+  }
+
+  @ApiOperation({
+    summary: 'Получить путь до документа с информацией о мероприятии',
+  })
+  @Get('/event/export/:id')
+  @Auth()
+  async exportEventToDocx(@Param('id') eventId: string) {
+    const response = await this.eventService.exportEventToDocx(eventId);
+
+    return response;
   }
 }

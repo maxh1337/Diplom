@@ -1,11 +1,12 @@
 import { Module } from '@nestjs/common';
+import { EventModule } from '../event/event.module';
 import { PrismaService } from '../prisma.service';
+import { UserModule } from '../user/user.module';
 import { AdminController } from './admin.controller';
 import { AdminService } from './admin.service';
-import { EventModule } from '../event/event.module';
 
 @Module({
-  imports: [EventModule],
+  imports: [EventModule, UserModule],
   controllers: [AdminController],
   providers: [AdminService, PrismaService],
   exports: [AdminService],

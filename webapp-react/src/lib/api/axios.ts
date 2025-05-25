@@ -3,7 +3,7 @@ import axios, { type CreateAxiosDefaults } from "axios";
 import { getContentType } from "./api.helper";
 
 const axiosOptions: CreateAxiosDefaults = {
-  baseURL: import.meta.env.VITE_BACKEND_URL,
+  baseURL: import.meta.env.VITE_BACKEND_API_URL,
   headers: {
     ...getContentType(),
     "ngrok-skip-browser-warning": "true",

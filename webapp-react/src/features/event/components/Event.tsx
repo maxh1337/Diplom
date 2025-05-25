@@ -29,6 +29,7 @@ export default function Event({ event, refetchEvent }: EventPageProps) {
         alt={event.title}
         className="w-full h-[30vh] object-cover rounded-xl mb-4"
       />
+
       <h2 className="text-white font-unbound text-3xl mb-2">{event.title}</h2>
 
       <div className="flex gap-2 overflow-x-auto max-w-full scrollbar-hide mb-4">

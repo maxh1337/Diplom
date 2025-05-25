@@ -150,4 +150,13 @@ export class UserService {
 
     return tgUser;
   }
+
+  async getAllUsersByAdmin() {
+    return await this.prisma.user.findMany({
+      include: {
+        events: true,
+        Feedback: true,
+      },
+    });
+  }
 }

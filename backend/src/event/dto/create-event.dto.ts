@@ -11,7 +11,7 @@ import {
 export class CreateEventDto {
   @IsString()
   @MaxLength(50)
-  @MinLength(10)
+  @MinLength(5)
   @ApiProperty({ example: 'Annual Tech Meetup 2025' })
   title: string;
 
