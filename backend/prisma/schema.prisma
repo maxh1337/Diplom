@@ -39,7 +39,7 @@ model User {
   yearOfBirth  Int?         @map("year_of_birth")
 
   events   Event[]
-  Feedback Feedback[]
+  feedback Feedback[]
 
   photoUrl String? @map("photo_url")
 

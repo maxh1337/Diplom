@@ -368,7 +368,28 @@ export class EventService {
             photoUrl: true,
           },
         },
-        feedback: true,
+        feedback: {
+          select: {
+            id: true,
+            rating: true,
+            comment: true,
+            createdAt: true,
+            user: {
+              select: {
+                id: true,
+                nickname: true,
+                telegramUsername: true,
+              },
+            },
+            event: {
+              select: {
+                id: true,
+                title: true,
+                administrator: true,
+              },
+            },
+          },
+        },
         administrator: {
           select: {
             id: true,

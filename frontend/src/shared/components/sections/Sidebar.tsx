@@ -11,7 +11,7 @@ export function Sidebar() {
   const { logOut } = useProfile();
   const pathname = usePathname();
 
-  if (pathname === "/") return null;
+  if (pathname === "/auth") return null;
 
   return (
     <aside

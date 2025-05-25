@@ -17,7 +17,8 @@
     "ngrok": "ngrok http 4200",
     "db:push-prod": "npx prisma db push && ts-node ./prisma/seed.ts",
     "db:push": "dotenv -e .env.development -- npx prisma db push && NODE_ENV=development ts-node ./prisma/seed.ts",
-    "seed": "NODE_ENV=development ts-node ./prisma/seed.ts"
+    "seed": "NODE_ENV=development ts-node ./prisma/seed.ts",
+    "migrate:dev": "dotenv -e .env.development -- npx prisma migrate dev"
   },
   "dependencies": {
     "@nestjs/common": "^11.1.1",

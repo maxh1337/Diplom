@@ -33,6 +33,6 @@ export interface IUser {
   userCategory: UserCategory;
   yearOfBirth?: number | null;
   events: IEvent[];
-  Feedback: IFeedback[];
+  feedback: IFeedback[];
   photoUrl?: string | null;
 }

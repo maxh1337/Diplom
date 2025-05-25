@@ -1,0 +1,129 @@
+.
+├── Dockerfile
+├── next-env.d.ts
+├── next.config.ts
+├── package.json
+├── pnpm-lock.yaml
+├── postcss.config.mjs
+├── project-structure.txt
+├── README.md
+├── src
+│   ├── app
+│   │   ├── 404.tsx
+│   │   ├── ClientInitialize.tsx
+│   │   ├── dashboard
+│   │   │   ├── events
+│   │   │   │   └── page.tsx
+│   │   │   ├── page.tsx
+│   │   │   └── users
+│   │   │       └── page.tsx
+│   │   ├── globals.css
+│   │   ├── layout.tsx
+│   │   ├── page.tsx
+│   │   └── Providers.tsx
+│   ├── features
+│   │   ├── auth
+│   │   │   ├── components
+│   │   │   │   ├── AuthPageWrapper.tsx
+│   │   │   │   └── form
+│   │   │   │       └── AuthForm.tsx
+│   │   │   └── hooks
+│   │   │       └── useAuthForm.ts
+│   │   ├── dashboard
+│   │   │   ├── components
+│   │   │   │   └── Statistics.tsx
+│   │   │   └── hooks
+│   │   ├── events
+│   │   │   ├── components
+│   │   │   │   ├── EventEditCreateFormModal.tsx
+│   │   │   │   ├── EventItem.tsx
+│   │   │   │   ├── EventItemSkeleton.tsx
+│   │   │   │   ├── EventParticipant.tsx
+│   │   │   │   ├── Events.tsx
+│   │   │   │   ├── EventsDetails.tsx
+│   │   │   │   ├── EventsList.tsx
+│   │   │   │   └── EventsSearch.tsx
+│   │   │   └── hooks
+│   │   │       ├── useCreateEvent.ts
+│   │   │       ├── useDeleteEvent.ts
+│   │   │       ├── useEventDetailsZustand.ts
+│   │   │       ├── useEventFiltersZustand.ts
+│   │   │       ├── useExportWord.ts
+│   │   │       ├── useGetEvents.ts
+│   │   │       ├── useKickUserFromEvent.ts
+│   │   │       └── useUpdateEvent.ts
+│   │   └── users
+│   │       ├── components
+│   │       │   ├── UserDetails.tsx
+│   │       │   ├── UserItem.tsx
+│   │       │   ├── UserItemSkeleton.tsx
+│   │       │   ├── Users.tsx
+│   │       │   ├── UsersList.tsx
+│   │       │   └── UsersSearch.tsx
+│   │       └── hooks
+│   │           ├── useDeleteUser.tsx
+│   │           ├── useGetUsers.ts
+│   │           ├── useUserDetailsZustand.ts
+│   │           └── useUserFiltersZustand.ts
+│   ├── lib
+│   │   ├── api
+│   │   │   ├── api.helper.ts
+│   │   │   └── axios.ts
+│   │   ├── constants
+│   │   │   ├── cookie-domain.ts
+│   │   │   └── urls.ts
+│   │   └── modules
+│   │       ├── admin
+│   │       │   ├── admin.service.ts
+│   │       │   └── admin.types.ts
+│   │       ├── auth
+│   │       │   ├── auth.service.ts
+│   │       │   └── auth.types.ts
+│   │       ├── events
+│   │       │   ├── event.service.ts
+│   │       │   └── event.types.ts
+│   │       ├── server-actions
+│   │       │   ├── middlewares
+│   │       │   │   ├── protect-admin.middleware.ts
+│   │       │   │   └── protect-login.middleware.ts
+│   │       │   └── utils
+│   │       │       ├── get-initial-profile.ts
+│   │       │       ├── get-new-tokens-by-refresh.ts
+│   │       │       ├── get-tokens-from-request.ts
+│   │       │       ├── jwt-verify.ts
+│   │       │       ├── next-redirect.ts
+│   │       │       └── redirect-to-login-or-404.ts
+│   │       └── user
+│   │           ├── user.service.ts
+│   │           └── user.types.ts
+│   ├── middleware.ts
+│   └── shared
+│       ├── components
+│       │   ├── sections
+│       │   │   ├── Header.tsx
+│       │   │   ├── MobileMenu.tsx
+│       │   │   ├── Modal.tsx
+│       │   │   └── Sidebar.tsx
+│       │   └── ui
+│       │       ├── AnimatedContainer.tsx
+│       │       ├── AnimateLeftSection.tsx
+│       │       ├── AnimateRightSection.tsx
+│       │       ├── Button.tsx
+│       │       ├── InputField.tsx
+│       │       ├── MiniLoader.tsx
+│       │       └── PopoverMenu.tsx
+│       ├── config
+│       │   └── pages
+│       │       ├── admin.config.ts
+│       │       └── public.config.ts
+│       ├── constants
+│       │   └── router.contstants.ts
+│       ├── hooks
+│       │   ├── useProfile.ts
+│       │   └── useUserZustand.ts
+│       └── utils
+│           ├── fetcher.ts
+│           └── transform-user-to-state.ts
+└── tsconfig.json
+
+40 directories, 87 files

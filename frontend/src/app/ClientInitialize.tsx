@@ -2,31 +2,29 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { getInitialProfile } from "../lib/modules/server-actions/utils/get-initial-profile";
 import { useUserZustand } from "../shared/hooks/useUserZustand";
 
 export default function ClientInitialize() {
-  const { fetchProfile, setAdmin, admin } = useUserZustand();
+  const { fetchProfile, admin, isLoading, hasFetched } = useUserZustand();
   const router = useRouter();
   const pathname = usePathname();
 
   useEffect(() => {
-    if (admin === null && pathname !== "/") {
-      router.replace("/");
-    }
-  }, [admin, pathname, router]);
+    fetchProfile();
+  }, [fetchProfile]);
 
   useEffect(() => {
-    const initializeProfile = async () => {
-      const { hasTokens } = await getInitialProfile();
+    if (!hasFetched || isLoading) return;
 
-      if (hasTokens) {
-        await fetchProfile();
-      }
-    };
+    if (pathname === "/") {
+      router.replace("/auth");
+      return;
+    }
 
-    initializeProfile();
-  }, [fetchProfile, setAdmin]);
+    if (admin === null && pathname !== "/auth") {
+      router.replace("/auth");
+    }
+  }, [admin, hasFetched, isLoading, pathname, router]);
 
   return null;
 }

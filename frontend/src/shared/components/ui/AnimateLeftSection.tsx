@@ -2,19 +2,18 @@
 
 import { ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
-import { useEventDetailsZustand } from "../../../features/events/hooks/useEventDetailsZustand";
 
 interface AnimatedLeftSectionProps {
   isOpen: boolean;
   children: ReactNode;
+  isRightSectionFullScreen: boolean;
 }
 
 export default function AnimatedLeftSection({
   isOpen,
   children,
+  isRightSectionFullScreen,
 }: AnimatedLeftSectionProps) {
-  const { isRightSectionFullScreen } = useEventDetailsZustand();
-
   return (
     <div
       className={twMerge(

@@ -28,9 +28,11 @@ import { CurrentAdmin } from '../auth/decorators/admin.decorator';
 import { Auth } from '../auth/decorators/auth.decorator';
 import { CreateEventDto } from '../event/dto/create-event.dto';
 import { EventService } from '../event/event.service';
+import { FeedbackService } from '../feedback/feedback.service';
 import { UserService } from '../user/user.service';
 import { AdminService } from './admin.service';
 import { AdminEventFilters } from './dto/admin-event-filters.dto';
+import { AdminUserFilters } from './dto/admin-user-filters.dto';
 import { UpdateAdminFieldsDto } from './dto/update-admin.dto';
 
 @ApiTags('Admin')
@@ -41,6 +43,7 @@ export class AdminController {
     private readonly eventService: EventService,
     private readonly adminService: AdminService,
     private readonly userService: UserService,
+    private readonly feedbackService: FeedbackService,
   ) {}
 
   @ApiOperation({ summary: 'Получить профиль администратора' })
@@ -191,11 +194,23 @@ export class AdminController {
     return this.eventService.deleteEventMember(eventId, userId);
   }
 
-  @ApiOperation({ summary: 'Получить всех пользователей telegram' })
+  @ApiOperation({ summary: 'Получить всех пользователей Telegram' })
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    description: 'Строка для поиска по nickname или telegramUsername',
+    type: String,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Список пользователей',
+  })
   @Get('/user/get-all')
+  @UsePipes(new ValidationPipe({ transform: true }))
   @Auth()
-  async getAllUsersAdmin() {
-    return this.userService.getAllUsersByAdmin();
+  async getAllUsersAdmin(@Query() dto?: AdminUserFilters) {
+    console.log(dto);
+    return this.userService.getAllUsersByAdmin(dto);
   }
 
   @ApiOperation({
@@ -207,5 +222,26 @@ export class AdminController {
     const response = await this.eventService.exportEventToDocx(eventId);
 
     return response;
+  }
+
+  @ApiOperation({
+    summary:
+      'Удалить пользователя (Все его участия в мероприятиях и отзывы автоматически удаляются вместе с ним)',
+  })
+  @Delete('/user/delete/:id')
+  @Auth()
+  async deleteUser(@Param('id') userId: string) {
+    const response = await this.userService.deleteUser(userId);
+
+    return response;
+  }
+
+  @ApiOperation({
+    summary: 'Удалить отзыв',
+  })
+  @Delete('/feedback/delete/:id')
+  @Auth()
+  async deleteFeedback(@Param('id') feedbackId: string) {
+    return await this.feedbackService.deleteFeedback(feedbackId);
   }
 }

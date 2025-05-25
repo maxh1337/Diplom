@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { AdminUserFilters } from '../admin/dto/admin-user-filters.dto';
 import { PrismaService } from '../prisma.service';
 import { ContinueRegistrationDto } from './dto/contrinue-registration.dto';
 import { ITelegramUser } from './types/tg-user-info.types';
@@ -140,7 +141,7 @@ export class UserService {
       },
       include: {
         events: true,
-        Feedback: true,
+        feedback: true,
       },
     });
 
@@ -151,11 +152,68 @@ export class UserService {
     return tgUser;
   }
 
-  async getAllUsersByAdmin() {
+  async getAllUsersByAdmin(dto?: AdminUserFilters) {
     return await this.prisma.user.findMany({
+      where: {
+        ...(dto.search
+          ? {
+              OR: [
+                {
+                  nickname: {
+                    contains: dto.search,
+                    mode: 'insensitive',
+                  },
+                },
+                {
+                  telegramUsername: {
+                    contains: dto.search,
+                    mode: 'insensitive',
+                  },
+                },
+              ],
+            }
+          : {}),
+      },
       include: {
         events: true,
-        Feedback: true,
+        feedback: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                nickname: true,
+                telegramUsername: true,
+              },
+            },
+            event: {
+              select: {
+                id: true,
+                title: true,
+                administrator: true,
+              },
+            },
+          },
+        },
+      },
+    });
+  }
+
+  async deleteUser(userId: string) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!user) throw new NotFoundException('User not found');
+
+    return await this.prisma.user.delete({
+      where: {
+        id: userId,
+      },
+      select: {
+        id: true,
+        nickname: true,
       },
     });
   }

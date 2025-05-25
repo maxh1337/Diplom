@@ -7,7 +7,7 @@ export default function Custom404() {
         Похоже, вы забрели не туда. Давайте вернемся на главную!
       </p>
       <a
-        href="/"
+        href="/auth"
         className="mt-6 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
       >
         Вернуться на главную

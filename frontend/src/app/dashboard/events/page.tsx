@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import Events from "../../../features/events/components/Events";
+export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Dashboard - Events",

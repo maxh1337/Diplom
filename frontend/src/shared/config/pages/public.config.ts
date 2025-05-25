@@ -1,5 +1,5 @@
 class PublicPages {
-  LOGIN = "/";
+  LOGIN = "/auth";
   ERROR = "/404";
 }
 

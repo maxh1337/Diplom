@@ -1,12 +1,12 @@
 "use server";
 
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { PUBLIC_PAGES } from "../../../../shared/config/pages/public.config";
+import { COOKIE_DOMAIN } from "../../../constants/cookie-domain";
 import { AuthToken, CookieSettings } from "../../auth/auth.types";
 import { getTokensFromRequest } from "../utils/get-tokens-from-request";
 import { jwtVerifyServer } from "../utils/jwt-verify";
 import { nextRedirect } from "../utils/next-redirect";
-import { COOKIE_DOMAIN } from "../../../constants/cookie-domain";
 
 export async function protectAdminPages(request: NextRequest) {
   const { tokens, response } = await getTokensFromRequest(request);
@@ -53,8 +53,7 @@ export async function protectAdminPages(request: NextRequest) {
     return redirectResponse;
   }
 
-  const nextResponse = NextResponse.next();
-  nextResponse.cookies.set({
+  response.cookies.set({
     name: AuthToken.ACCESS_TOKEN,
     value: tokens.accessToken,
     httpOnly: CookieSettings.HTTP_ONLY,
@@ -64,7 +63,7 @@ export async function protectAdminPages(request: NextRequest) {
     path: CookieSettings.PATH,
     maxAge: CookieSettings.ACCESS_TOKEN_MAX_AGE,
   });
-  nextResponse.cookies.set({
+  response.cookies.set({
     name: AuthToken.REFRESH_TOKEN,
     value: tokens.refreshToken,
     httpOnly: CookieSettings.HTTP_ONLY,
@@ -75,5 +74,6 @@ export async function protectAdminPages(request: NextRequest) {
     maxAge: CookieSettings.REFRESH_TOKEN_MAX_AGE,
   });
 
-  return nextResponse;
+  response.headers.set("x-middleware-cache", "no-cache");
+  return response;
 }

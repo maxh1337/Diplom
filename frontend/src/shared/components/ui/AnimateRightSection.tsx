@@ -3,20 +3,20 @@
 import { Maximize2, Minimize2 } from "lucide-react";
 import { ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
-import { useEventDetailsZustand } from "../../../features/events/hooks/useEventDetailsZustand";
 
 interface AnimatedRightSectionProps {
   isOpen: boolean;
   children: ReactNode;
+  isRightSectionFullScreen: boolean;
+  openRightSectionFullscreen: (isRightSectionFullScreen: boolean) => void;
 }
 
 export default function AnimatedRightSection({
   isOpen,
   children,
+  isRightSectionFullScreen,
+  openRightSectionFullscreen,
 }: AnimatedRightSectionProps) {
-  const { isRightSectionFullScreen, openRightSectionFullscreen } =
-    useEventDetailsZustand();
-
   return (
     <div
       className={twMerge(

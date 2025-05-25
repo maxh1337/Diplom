@@ -1,15 +1,15 @@
 import { Metadata } from "next";
-import Statistics from "../../features/dashboard/components/Statistics";
+import Users from "../../../features/users/components/Users";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Dashboard - Statistics",
+  title: "Dashboard - Users",
 };
 
 export default function Page() {
   return (
-    <div className="w-full">
-      <Statistics />
+    <div className="w-full h-full">
+      <Users />
     </div>
   );
 }

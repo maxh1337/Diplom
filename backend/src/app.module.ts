@@ -11,6 +11,7 @@ import { EventModule } from './event/event.module';
 import { SeedModule } from './seed/seed.module';
 import { TelegramModule } from './telegram/telegram.module';
 import { UserModule } from './user/user.module';
+import { FeedbackModule } from './feedback/feedback.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { UserModule } from './user/user.module';
     AuthModule,
     EventImageModule,
     SeedModule,
+    FeedbackModule,
   ],
   controllers: [AppController],
 })

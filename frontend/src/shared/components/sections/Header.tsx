@@ -13,7 +13,7 @@ export default function Header() {
 
   const pathname = usePathname();
 
-  const hiddenRoutes = ["/"];
+  const hiddenRoutes = ["/auth"];
   if (hiddenRoutes.includes(pathname)) return null;
 
   return (

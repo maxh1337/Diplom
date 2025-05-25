@@ -4,7 +4,7 @@ import { CalendarDays, CheckCircle, Clock, XCircle } from "lucide-react";
 import Image from "next/image";
 import { twMerge } from "tailwind-merge";
 import { BACKEND_MAIN } from "../../../lib/constants/urls";
-import AnimatedRightSection from "../../../shared/components/ui/AnimateRightSection";
+import Feedback from "../../../shared/components/ui/Feedback";
 import { useEventDetailsZustand } from "../hooks/useEventDetailsZustand";
 import { useExportWord } from "../hooks/useExportWord";
 import EventParticipant from "./EventParticipant";
@@ -30,7 +30,7 @@ export default function EventsDetails() {
     isActive,
     description,
     participants,
-    feedback, // Предполагаем, что feedback доступен
+    feedback,
     id,
   } = selectedEvent;
 
@@ -43,7 +43,7 @@ export default function EventsDetails() {
   };
 
   return (
-    <AnimatedRightSection isOpen={isOpen}>
+    <>
       <div className="flex justify-between items-center mb-4">
         <h2 className="font-brain font-bold text-2xl ml-10">{title}</h2>
         <button
@@ -126,9 +126,7 @@ export default function EventsDetails() {
 
       {/* Участники и отзывы */}
       {isRightSectionFullScreen ? (
-        // Фуллскрин: участники слева, отзывы справа
         <div className="flex gap-6 mb-4">
-          {/* Участники (левая часть) */}
           <div className="w-1/2">
             <h3 className="font-brain text-white text-lg mb-2">Участники:</h3>
             {participants.length > 0 ? (
@@ -142,7 +140,6 @@ export default function EventsDetails() {
             )}
           </div>
 
-          {/* Отзывы (правая часть) */}
           <div className="w-1/2">
             <h3 className="font-brain text-white text-lg mb-2">
               Обратная связь:
@@ -150,17 +147,7 @@ export default function EventsDetails() {
             {feedback && feedback.length > 0 ? (
               <div className="space-y-3">
                 {feedback.map((fb, index) => (
-                  <div
-                    key={index}
-                    className="p-3 bg-gray-800 rounded-md shadow-md"
-                  >
-                    <p className="text-white font-brain">
-                      Оценка: <span className="font-bold">{fb.rating}</span>
-                    </p>
-                    <p className="text-white/90 font-brain">
-                      Комментарий: {fb.comment || "Нет комментария"}
-                    </p>
-                  </div>
+                  <Feedback key={index} feedback={fb} variant="event-page" />
                 ))}
               </div>
             ) : (
@@ -169,7 +156,6 @@ export default function EventsDetails() {
           </div>
         </div>
       ) : (
-        // Не фуллскрин: участники, затем отзывы ниже
         <>
           <div className="mb-6">
             <h3 className="font-brain text-white text-lg mb-2">Участники:</h3>
@@ -191,17 +177,7 @@ export default function EventsDetails() {
             {feedback && feedback.length > 0 ? (
               <div className="space-y-3">
                 {feedback.map((fb, index) => (
-                  <div
-                    key={index}
-                    className="p-3 bg-gray-800 rounded-md shadow-md"
-                  >
-                    <p className="text-white font-brain">
-                      Оценка: <span className="font-bold">{fb.rating}</span>
-                    </p>
-                    <p className="text-white/90 font-brain">
-                      Комментарий: {fb.comment || "Нет комментария"}
-                    </p>
-                  </div>
+                  <Feedback key={index} feedback={fb} variant="event-page" />
                 ))}
               </div>
             ) : (
@@ -210,6 +186,6 @@ export default function EventsDetails() {
           </div>
         </>
       )}
-    </AnimatedRightSection>
+    </>
   );
 }

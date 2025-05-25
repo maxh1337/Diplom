@@ -17,7 +17,7 @@ export const CookieSettings = {
     process.env.NODE_ENV === "production"
       ? ("lax" as const)
       : ("none" as const),
-  PATH: "/",
+  PATH: "/dashboard",
 } as const;
 
 export type CookieSettings =

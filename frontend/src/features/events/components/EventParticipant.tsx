@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { IUser } from "../../../lib/modules/admin/admin.types";
 import {
   CustomPopover,
@@ -16,11 +17,14 @@ interface Props {
 export default function EventParticipant({ user }: Props) {
   const { mutateKickUser, isKickUserPending } = useKickUserFromEvent();
   const { selectedEvent } = useEventDetailsZustand();
+  const router = useRouter();
 
   const items: PopoverItem[] = [
     {
       label: "Открыть",
-      onSelect: () => {},
+      onSelect: () => {
+        router.push(`/dashboard/users?id=${user.id}`);
+      },
     },
     {
       label: "Исключить",
