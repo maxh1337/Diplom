@@ -3,6 +3,7 @@ import { API_URL } from "../constants/urls";
 
 import authService from "../modules/auth/auth.service";
 import { errorCatch, getContentType } from "./api.helper";
+import { csrfService } from "./csrf.service";
 
 const axiosOptions: CreateAxiosDefaults = {
   baseURL: API_URL,
@@ -13,7 +14,38 @@ const axiosOptions: CreateAxiosDefaults = {
 export const axiosClassic = axios.create(axiosOptions);
 
 export const instance = axios.create(axiosOptions);
-console.log(API_URL, "API URL");
+
+instance.interceptors.request.use(
+  async (config) => {
+    const method = config.method?.toUpperCase();
+    const requiresCsrf =
+      process.env.NODE_ENV === "production" &&
+      ["POST", "PUT", "PATCH", "DELETE"].includes(method || "");
+    const isAuthRoute = [
+      "/auth/login",
+      "/auth/logout",
+      "/auth/access-token",
+    ].some((authPath) => config.url?.includes(authPath));
+
+    if (requiresCsrf && !isAuthRoute) {
+      try {
+        const csrfToken = await csrfService.getToken();
+
+        if (typeof config.headers?.set === "function") {
+          config.headers.set("X-CSRF-Token", csrfToken);
+        } else if (config.headers) {
+          (config.headers as Record<string, string>)["X-CSRF-Token"] =
+            csrfToken;
+        }
+      } catch (e) {
+        console.error("Failed to load CSRF token", e);
+      }
+    }
+
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 instance.interceptors.response.use(
   (config) => config,

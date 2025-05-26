@@ -2,7 +2,7 @@ import { axiosSecure } from "../../api/axios";
 import type { IContinueRegistration, IMyEvents, IUser } from "./user.types";
 
 class UserService {
-  private _BASE_URL = "/users";
+  private _BASE_URL = "/user";
 
   async fetchProfile(initData: string) {
     return axiosSecure.get<IUser>(`${this._BASE_URL}/me/get-profile`, {

@@ -4,7 +4,7 @@ export function usePlatformGuard() {
   const { isAllowedPlatform } = useDebugTgZustand();
 
   if (isAllowedPlatform === null) {
-    return null; // Ожидание инициализации
+    return null;
   }
 
   if (!isAllowedPlatform) {

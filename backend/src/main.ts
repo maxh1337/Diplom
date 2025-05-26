@@ -4,12 +4,34 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import cookieParser from 'cookie-parser';
 import { join } from 'path';
 import { AppModule } from './app.module';
+import { csrfExclude } from './csrf.middleware';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   app.setGlobalPrefix('api');
+
   app.use(cookieParser());
+
+  app.use(
+    csrfExclude([
+      '/api/auth/login',
+      '/api/auth/logout',
+      '/api/auth/access-token',
+      '/api/public',
+      '/api/user',
+      '/api/event',
+      '/api/feedback',
+    ]),
+  );
+
+  app.use((err, req, res, next) => {
+    if (err.code === 'EBADCSRFTOKEN') {
+      return res.status(403).json({ message: 'Invalid CSRF token' });
+    }
+    next(err);
+  });
+
   app.enableCors({
     origin: [
       'http://localhost:3000',
@@ -28,6 +50,7 @@ async function bootstrap() {
       'Authorization',
       'x-init-data',
       'Recaptcha',
+      'X-CSRF-Token',
     ],
   });
 

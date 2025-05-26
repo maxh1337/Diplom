@@ -46,6 +46,20 @@ export class AdminController {
     private readonly feedbackService: FeedbackService,
   ) {}
 
+  @Get('/statistics/get-all')
+  @ApiOperation({ summary: 'Получить статистику' })
+  @ApiResponse({ status: 200, description: 'Статистика получена' })
+  @ApiResponse({
+    status: 500,
+    description: 'Ошибка сервера при получении статистики',
+  })
+  @Auth()
+  async getStatistics() {
+    const stats = await this.adminService.getStatistics();
+    console.log(stats, 'stats');
+    return stats;
+  }
+
   @ApiOperation({ summary: 'Получить профиль администратора' })
   @ApiResponse({ status: 200, description: 'Профиль администратора получен' })
   @Auth()
@@ -114,7 +128,6 @@ export class AdminController {
     @Body() dto: CreateEventDto,
     @UploadedFile() image?: Express.Multer.File,
   ) {
-    console.log(image);
     return this.eventService.create(adminId, dto, image);
   }
 

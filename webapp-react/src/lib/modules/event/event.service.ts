@@ -26,7 +26,7 @@ class EventService {
 
   async sendFeedback(rating: number, eventId: string, comment?: string) {
     return axiosSecure.post<IEventFeedback>(
-      `${this._BASE_URL}/send-feedback/${eventId}`,
+      `/feedback/send-feedback/${eventId}`,
       { rating: rating, comment: comment ? comment : "" }
     );
   }

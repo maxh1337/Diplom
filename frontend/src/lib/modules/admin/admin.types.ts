@@ -36,3 +36,19 @@ export interface IUser {
   feedback: IFeedback[];
   photoUrl?: string | null;
 }
+
+export interface Statistics {
+  stats: {
+    label: string;
+    value: number;
+  }[];
+  chartData: {
+    name: string;
+    users: number;
+    events: number;
+  }[];
+}
+
+export interface UpdateAdminProfile {
+  username: string;
+}

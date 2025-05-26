@@ -47,18 +47,18 @@ services:
       - backend
     restart: always
 
-  webapp:
-    build:
-      context: ./webapp-react
-      dockerfile: Dockerfile
-    container_name: webapp
-    env_file:
-      - ./webapp-react/.env.production
-    networks:
-      - dev-network
-    depends_on:
-      - backend
-    restart: always
+  # webapp:
+  #   build:
+  #     context: ./webapp-react
+  #     dockerfile: Dockerfile
+  #   container_name: webapp
+  #   env_file:
+  #     - ./webapp-react/.env.production
+  #   networks:
+  #     - dev-network
+  #   depends_on:
+  #     - backend
+  #   restart: always
 
   nginx:
     image: nginx:latest
@@ -68,7 +68,6 @@ services:
       - ./nginx/ssl:/etc/nginx/ssl
       - ./backend/uploads:/var/www/uploads:ro
       - ./logs:/var/log/nginx
-      # - ./nginx/certbot-www:/var/www/certbot
     ports:
       - "80:80"
       - "443:443"

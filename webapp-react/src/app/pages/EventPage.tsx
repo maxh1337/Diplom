@@ -20,7 +20,6 @@ function EventPage() {
   });
 
   return (
-    // <div className=" w-full pb-17">
     <div className=" text-white w-full pb-17">
       {isEventLoading ? (
         <EventSkeleton />
@@ -30,7 +29,6 @@ function EventPage() {
         <div></div>
       )}
     </div>
-    // </div>
   );
 }
 

@@ -6,7 +6,6 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
   const pathname = request.nextUrl.pathname;
 
   if (pathname === "/auth") {
-    console.log("БРЕДИК");
     return protectLoginPages(request);
   }
 

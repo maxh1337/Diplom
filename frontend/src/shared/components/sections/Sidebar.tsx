@@ -8,7 +8,7 @@ import { useProfile } from "../../hooks/useProfile";
 import Button from "../ui/Button";
 
 export function Sidebar() {
-  const { logOut } = useProfile();
+  const { logOut, admin } = useProfile();
   const pathname = usePathname();
 
   if (pathname === "/auth") return null;
@@ -28,6 +28,13 @@ export function Sidebar() {
         <div className="w-full">
           {navItems.map((item) => {
             const isActive = pathname === item.href;
+            const isProtected =
+              item.protection && !admin?.rights.includes("FULL");
+
+            if (isProtected) {
+              return null;
+            }
+
             const Icon = item.icon;
             return (
               <Link

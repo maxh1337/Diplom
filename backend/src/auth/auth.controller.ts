@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   Post,
   Req,
@@ -12,6 +13,7 @@ import {
 import {
   ApiBody,
   ApiCookieAuth,
+  ApiOkResponse,
   ApiOperation,
   ApiResponse,
   ApiTags,
@@ -100,5 +102,19 @@ export class AuthController {
   async logout(@Res({ passthrough: true }) res: Response) {
     this.refreshTokenService.removeTokensFromResponse(res);
     return true;
+  }
+
+  @ApiOperation({ summary: 'Получение CSRF токена' })
+  @ApiOkResponse({
+    description: 'CSRF токен успешно получен',
+    schema: {
+      example: {
+        csrfToken: 'a1b2c3d4e5f6g7',
+      },
+    },
+  })
+  @Get('auth/csrf-token')
+  getCsrfToken(@Req() req: Request) {
+    return { csrfToken: req.csrfToken() };
   }
 }

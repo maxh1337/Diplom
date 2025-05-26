@@ -21,7 +21,7 @@ import { ITelegramUser } from './types/tg-user-info.types';
 import { UserService } from './user.service';
 
 @ApiTags('Users')
-@Controller('users')
+@Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 

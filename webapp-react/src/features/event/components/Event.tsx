@@ -29,15 +29,12 @@ export default function Event({ event, refetchEvent }: EventPageProps) {
         alt={event.title}
         className="w-full h-[30vh] object-cover rounded-xl mb-4"
       />
-
       <h2 className="text-white font-unbound text-3xl mb-2">{event.title}</h2>
-
       <div className="flex gap-2 overflow-x-auto max-w-full scrollbar-hide mb-4">
         {event.hashTags.map((tag, idx) => (
           <EventHashtag key={idx} hashTag={tag} />
         ))}
       </div>
-
       <div className="flex gap-2 text-white mb-2">
         <p className="font-brain font-bold">Дата:</p>
         <p className="font-unbound">

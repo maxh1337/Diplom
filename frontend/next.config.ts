@@ -3,7 +3,6 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
-  matcher: ["/auth", "/dashboard/:path*"],
   images: {
     remotePatterns: [
       {
