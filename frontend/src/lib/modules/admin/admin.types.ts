@@ -17,7 +17,6 @@ export interface IAdmin {
   id: string;
   username?: string | null;
   login: string;
-  password: string;
   rights: AdminRole[];
   createdEvents: IEvent[];
 }
@@ -51,4 +50,13 @@ export interface Statistics {
 
 export interface UpdateAdminProfile {
   username: string;
+}
+
+export interface IAdminFilters {
+  search?: string;
+}
+
+export interface IAdminLoginData {
+  login: string;
+  password: string;
 }

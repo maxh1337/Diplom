@@ -50,7 +50,6 @@ export function CustomPopover({
               className={twMerge(
                 "flex items-center w-full px-4 py-2 text-left text-sm transition-colors cursor-pointer",
                 item.destructive ? "hover:bg-red-500" : "hover:bg-yellow-500",
-                // rounded corners only first and last
                 idx === 0 ? "rounded-t-lg" : "",
                 idx === items.length - 1 ? "rounded-b-lg" : ""
               )}

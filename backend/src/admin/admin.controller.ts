@@ -207,6 +207,24 @@ export class AdminController {
     return this.eventService.deleteEventMember(eventId, userId);
   }
 
+  @ApiOperation({ summary: 'Получить всех администраторов' })
+  @ApiQuery({
+    name: 'search',
+    required: false,
+    description: 'Строка для поиска по username или login',
+    type: String,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Список администраторов',
+  })
+  @Get('/get-all')
+  @UsePipes(new ValidationPipe({ transform: true }))
+  @Auth('FULL')
+  async getAllAdmins(@Query() dto?: AdminUserFilters) {
+    return this.adminService.getAllAdmins(dto);
+  }
+
   @ApiOperation({ summary: 'Получить всех пользователей Telegram' })
   @ApiQuery({
     name: 'search',

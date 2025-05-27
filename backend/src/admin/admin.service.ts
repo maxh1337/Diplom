@@ -8,6 +8,7 @@ import { randomBytes } from 'crypto';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { PrismaService } from '../prisma.service';
+import { AdminSearchFiltersDto } from './dto/admin-getAll-filters.dto';
 import { Stats } from './dto/stats.types';
 import { UpdateAdminFieldsDto } from './dto/update-admin.dto';
 
@@ -15,6 +16,47 @@ import { UpdateAdminFieldsDto } from './dto/update-admin.dto';
 export class AdminService {
   constructor(private readonly prisma: PrismaService) {}
 
+  async getAllAdmins(dto?: AdminSearchFiltersDto) {
+    const admins = await this.prisma.admin.findMany({
+      where: {
+        ...(dto.search
+          ? {
+              OR: [
+                {
+                  username: {
+                    contains: dto.search,
+                    mode: 'insensitive',
+                  },
+                },
+                {
+                  login: {
+                    contains: dto.search,
+                    mode: 'insensitive',
+                  },
+                },
+              ],
+            }
+          : {}),
+      },
+      select: {
+        id: true,
+        username: true,
+        login: true,
+        rights: true,
+        createdEvents: {
+          select: {
+            id: true,
+            title: true,
+            eventDate: true,
+            eventTime: true,
+            isActive: true,
+            description: true,
+          },
+        },
+      },
+    });
+    return admins;
+  }
   async getAdminProfile(adminId: string) {
     const admin = await this.prisma.admin.findUnique({
       where: {

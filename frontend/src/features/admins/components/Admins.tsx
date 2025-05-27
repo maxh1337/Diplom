@@ -5,54 +5,60 @@ import { useEffect } from "react";
 import AnimatedContainer from "../../../shared/components/ui/AnimatedContainer";
 import AnimatedLeftSection from "../../../shared/components/ui/AnimateLeftSection";
 import AnimatedRightSection from "../../../shared/components/ui/AnimateRightSection";
-import { useGetUsers } from "../hooks/useGetUsers";
-import { useUserDetailsZustand } from "../hooks/useUserDetailsZustand";
-import UserDetails from "./UserDetails";
-import UsersList from "./UsersList";
-import UsersSearch from "./UsersSearch";
+import { useAdminDetailsZustand } from "../hooks/useAdminDetailsZustand";
+import { useGetAdmins } from "../hooks/useGetAdmins";
+import AdminDetails from "./AdminDetails";
+import AdminsList from "./AdminsList";
+import AdminsSearch from "./AdminsSearch";
 
-export default function Users() {
+export default function Admins() {
   const {
     isOpen,
     isRightSectionFullScreen,
     openRightSectionFullscreen,
-    openUser,
-    closeUser,
-  } = useUserDetailsZustand();
-  const { users, isUsersLoading, refetch } = useGetUsers();
+    openAdmin,
+    closeAdmin,
+  } = useAdminDetailsZustand();
+  const { admins, isAdminsLoading, refetch } = useGetAdmins();
 
   const searchParams = useSearchParams();
-  const userIdFromQuery = searchParams.get("id");
+  const adminIdFromQuery = searchParams.get("id");
 
   useEffect(() => {
-    if (userIdFromQuery && users) {
-      const foundUser = users.find((user) => user.id === userIdFromQuery);
-      if (foundUser) {
-        openUser(foundUser);
+    if (adminIdFromQuery && admins) {
+      const foundAdmin = admins.find((admin) => admin.id === adminIdFromQuery);
+      if (foundAdmin) {
+        openAdmin(foundAdmin);
         openRightSectionFullscreen(false);
       } else {
-        closeUser();
+        closeAdmin();
       }
     }
-  }, [userIdFromQuery, users, openUser, closeUser, openRightSectionFullscreen]);
+  }, [
+    adminIdFromQuery,
+    admins,
+    openAdmin,
+    closeAdmin,
+    openRightSectionFullscreen,
+  ]);
 
   return (
     <div className="w-full h-fit text-white">
       <h1 className="font-brain text-2xl mb-4">Users</h1>
-      <UsersSearch />
+      <AdminsSearch />
       <AnimatedContainer>
         <AnimatedLeftSection
           isOpen={isOpen}
           isRightSectionFullScreen={isRightSectionFullScreen}
         >
-          <UsersList users={users} isLoading={isUsersLoading} />
+          <AdminsList admins={admins} isLoading={isAdminsLoading} />
         </AnimatedLeftSection>
         <AnimatedRightSection
           isOpen={isOpen}
           isRightSectionFullScreen={isRightSectionFullScreen}
           openRightSectionFullscreen={openRightSectionFullscreen}
         >
-          <UserDetails />
+          <AdminDetails />
         </AnimatedRightSection>
       </AnimatedContainer>
     </div>
