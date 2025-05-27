@@ -26,7 +26,6 @@ export async function getNewTokensByRefresh(refreshToken: string) {
 
   const data: IAuthResponse = await response.json();
 
-  // Извлекаем новые токены из cookies ответа
   const cookies = response.headers.get("set-cookie")?.split(", ") || [];
   let accessToken = "";
   let newRefreshToken = refreshToken;

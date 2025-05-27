@@ -17,11 +17,11 @@ type ChatState = {
 
 export const useChatZustand = create<ChatState>((set) => ({
   messages: [
-    {
-      id: "system-1",
-      role: "system",
-      content: "Отвечай только на русском языке.",
-    },
+    // {
+    //   id: "system-1",
+    //   role: "system",
+    //   content: "Отвечай только на русском языке.",
+    // },
   ],
   message: "",
   isLoading: false,

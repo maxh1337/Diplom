@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import { twMerge } from "tailwind-merge";
 import { useDebugTgZustand } from "../../../shared/hooks/useDebugTg";
 import { useShowBottomMenu } from "../../../shared/hooks/useShowBottomMenu";
+import { useGetEvents } from "../../events/hooks/useGetEvents";
 import { useChatZustand } from "../hooks/useChatZustand";
 import useParseMarkdown from "../hooks/useParseMarkdown";
 import useSendMessage from "../hooks/useSendMessages";
@@ -14,14 +15,39 @@ export type Message = {
 };
 
 const GeminiChatbot = () => {
-  const { messages, message, setMessage, isLoading } = useChatZustand();
+  const { messages, message, setMessage, isLoading, setMessages } =
+    useChatZustand();
   const { handleSendMessage } = useSendMessage();
+  const { events } = useGetEvents();
   const setBottomMenuVisible = useShowBottomMenu((s) => s.setIsVisible);
   const { parseMarkdown } = useParseMarkdown();
   const { isKeyboardOpen } = useViewport();
   const { platform } = useDebugTgZustand();
   const inputRef = useRef<HTMLInputElement>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!events || events.length === 0) return;
+
+    const eventsText = events
+      .map(
+        (event) =>
+          `Название: ${event.title}\nОписание: ${
+            event.description
+          }\nХэштеги: ${event.hashTags.join(", ")}`
+      )
+      .join("\n\n");
+
+    setMessages([
+      {
+        id: "system-1",
+        role: "system",
+        content: `Отвечай только на русском языке. Вот список мероприятий которые есть в данный момент - ${eventsText}.
+        Если пользователь попросит тебя подобрать ему что то, то спроси уточняющий вопрос и потом если что то подойдет или будет примерно похоже,
+        То Выдай ему только название мероприятия`,
+      },
+    ]);
+  }, []);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });

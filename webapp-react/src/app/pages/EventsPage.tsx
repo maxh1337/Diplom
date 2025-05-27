@@ -1,18 +1,12 @@
-import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import Events from "../../features/events/components/Events";
 import EventsSearch from "../../features/events/components/EventsSearch";
 import { useEventFiltersStore } from "../../features/events/hooks/useEventsZustand";
-import eventService from "../../lib/modules/event/event.service";
+import { useGetEvents } from "../../features/events/hooks/useGetEvents";
 
 export default function EventsPage() {
-  const { filters, setAvailableHashtags } = useEventFiltersStore();
-
-  const { data: events, isLoading: isEventsLoading } = useQuery({
-    queryKey: ["fetch all events", filters],
-    queryFn: () => eventService.fetchEvents(filters),
-    select: ({ data }) => data,
-  });
+  const { setAvailableHashtags } = useEventFiltersStore();
+  const { events, isEventsLoading } = useGetEvents();
 
   useEffect(() => {
     if (events) {

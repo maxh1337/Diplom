@@ -10,11 +10,17 @@
 ├── src
 │   ├── app
 │   │   ├── 404.tsx
+│   │   ├── auth
+│   │   │   └── page.tsx
 │   │   ├── ClientInitialize.tsx
 │   │   ├── dashboard
+│   │   │   ├── admins
+│   │   │   │   └── page.tsx
 │   │   │   ├── events
 │   │   │   │   └── page.tsx
 │   │   │   ├── page.tsx
+│   │   │   ├── settings
+│   │   │   │   └── page.tsx
 │   │   │   └── users
 │   │   │       └── page.tsx
 │   │   ├── globals.css
@@ -22,6 +28,21 @@
 │   │   ├── page.tsx
 │   │   └── Providers.tsx
 │   ├── features
+│   │   ├── admins
+│   │   │   ├── components
+│   │   │   │   ├── AdminDetails.tsx
+│   │   │   │   ├── AdminEventItem.tsx
+│   │   │   │   ├── AdminItem.tsx
+│   │   │   │   ├── AdminItemSkeleton.tsx
+│   │   │   │   ├── Admins.tsx
+│   │   │   │   ├── AdminsList.tsx
+│   │   │   │   ├── AdminsSearch.tsx
+│   │   │   │   └── CreateAdminPopup.tsx
+│   │   │   └── hooks
+│   │   │       ├── useAdminDetailsZustand.ts
+│   │   │       ├── useAdminFiltersZustand.ts
+│   │   │       ├── useCreateNewAdmin.ts
+│   │   │       └── useGetAdmins.ts
 │   │   ├── auth
 │   │   │   ├── components
 │   │   │   │   ├── AuthPageWrapper.tsx
@@ -52,23 +73,30 @@
 │   │   │       ├── useGetEvents.ts
 │   │   │       ├── useKickUserFromEvent.ts
 │   │   │       └── useUpdateEvent.ts
+│   │   ├── settings
+│   │   │   ├── components
+│   │   │   │   └── Settings.tsx
+│   │   │   └── hooks
+│   │   │       └── useUpdateAdminFields.ts
 │   │   └── users
 │   │       ├── components
 │   │       │   ├── UserDetails.tsx
+│   │       │   ├── UserEventItem.tsx
 │   │       │   ├── UserItem.tsx
 │   │       │   ├── UserItemSkeleton.tsx
 │   │       │   ├── Users.tsx
 │   │       │   ├── UsersList.tsx
 │   │       │   └── UsersSearch.tsx
 │   │       └── hooks
-│   │           ├── useDeleteUser.tsx
+│   │           ├── useDeleteUser.ts
 │   │           ├── useGetUsers.ts
 │   │           ├── useUserDetailsZustand.ts
 │   │           └── useUserFiltersZustand.ts
 │   ├── lib
 │   │   ├── api
 │   │   │   ├── api.helper.ts
-│   │   │   └── axios.ts
+│   │   │   ├── axios.ts
+│   │   │   └── csrf.service.ts
 │   │   ├── constants
 │   │   │   ├── cookie-domain.ts
 │   │   │   └── urls.ts
@@ -82,6 +110,8 @@
 │   │       ├── events
 │   │       │   ├── event.service.ts
 │   │       │   └── event.types.ts
+│   │       ├── feedback
+│   │       │   └── feedback.service.ts
 │   │       ├── server-actions
 │   │       │   ├── middlewares
 │   │       │   │   ├── protect-admin.middleware.ts
@@ -109,6 +139,7 @@
 │       │       ├── AnimateLeftSection.tsx
 │       │       ├── AnimateRightSection.tsx
 │       │       ├── Button.tsx
+│       │       ├── Feedback.tsx
 │       │       ├── InputField.tsx
 │       │       ├── MiniLoader.tsx
 │       │       └── PopoverMenu.tsx
@@ -119,6 +150,7 @@
 │       ├── constants
 │       │   └── router.contstants.ts
 │       ├── hooks
+│       │   ├── useDeleteFeedback.ts
 │       │   ├── useProfile.ts
 │       │   └── useUserZustand.ts
 │       └── utils
@@ -126,4 +158,4 @@
 │           └── transform-user-to-state.ts
 └── tsconfig.json
 
-40 directories, 87 files
+50 directories, 109 files

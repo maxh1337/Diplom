@@ -8,7 +8,6 @@ interface EventsProps {
 }
 
 export default function Events({ events, isEventsLoading }: EventsProps) {
-  console.log(events);
   return (
     <div className="w-full flex flex-col">
       {isEventsLoading ? (

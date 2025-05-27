@@ -1,6 +1,5 @@
 import axios, { CreateAxiosDefaults } from "axios";
 import { API_URL } from "../constants/urls";
-
 import authService from "../modules/auth/auth.service";
 import { errorCatch, getContentType } from "./api.helper";
 import { csrfService } from "./csrf.service";
@@ -8,12 +7,16 @@ import { csrfService } from "./csrf.service";
 const axiosOptions: CreateAxiosDefaults = {
   baseURL: API_URL,
   headers: getContentType(),
-  withCredentials: true,
 };
 
 export const axiosClassic = axios.create(axiosOptions);
 
-export const instance = axios.create(axiosOptions);
+const axiosInstanceOptions: CreateAxiosDefaults = {
+  baseURL: API_URL,
+  headers: getContentType(),
+  withCredentials: true,
+};
+export const instance = axios.create(axiosInstanceOptions);
 
 instance.interceptors.request.use(
   async (config) => {
@@ -26,7 +29,6 @@ instance.interceptors.request.use(
       "/auth/logout",
       "/auth/access-token",
     ].some((authPath) => config.url?.includes(authPath));
-
     if (requiresCsrf && !isAuthRoute) {
       try {
         const csrfToken = await csrfService.getToken();
@@ -41,7 +43,6 @@ instance.interceptors.request.use(
         console.error("Failed to load CSRF token", e);
       }
     }
-
     return config;
   },
   (error) => Promise.reject(error)
@@ -51,7 +52,6 @@ instance.interceptors.response.use(
   (config) => config,
   async (error) => {
     const originalRequest = error.config;
-
     if (
       (error.response?.status === 401 ||
         errorCatch(error) === "jwt expired" ||
@@ -60,7 +60,6 @@ instance.interceptors.response.use(
       !error.config._isRetry
     ) {
       originalRequest._isRetry = true;
-
       try {
         await authService.getNewTokens();
         console.log("From Axios: Tokens refreshed");
@@ -76,7 +75,6 @@ instance.interceptors.response.use(
         throw refreshError;
       }
     }
-
     throw error;
   }
 );

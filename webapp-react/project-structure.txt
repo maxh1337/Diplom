@@ -1,4 +1,5 @@
 .
+├── Dockerfile
 ├── index.html
 ├── package.json
 ├── pnpm-lock.yaml
@@ -14,34 +15,52 @@
 │   │   ├── config
 │   │   │   ├── Providers.tsx
 │   │   │   ├── Tg.tsx
+│   │   │   ├── TgBackButtonManager.tsx
 │   │   │   └── YouCantAccesFromBrowser.tsx
 │   │   ├── globals.css
 │   │   ├── pages
-│   │   │   ├── Chatbot.tsx
-│   │   │   ├── Home.tsx
-│   │   │   ├── NotFound.tsx
-│   │   │   └── Profile.tsx
+│   │   │   ├── ChatbotPage.tsx
+│   │   │   ├── EventPage.tsx
+│   │   │   ├── EventsPage.tsx
+│   │   │   ├── HomePage.tsx
+│   │   │   ├── LeaveFeedback.tsx
+│   │   │   ├── NotFoundPage.tsx
+│   │   │   └── ProfilePage.tsx
 │   │   └── routes
 │   │       ├── index.tsx
 │   │       └── ProtectedRoute.tsx
-│   ├── assets
-│   ├── EnvUnsupported.tsx
 │   ├── features
 │   │   ├── chatbot
 │   │   │   ├── components
+│   │   │   │   └── GeminiChatbot.tsx
 │   │   │   └── hooks
+│   │   │       ├── useChatZustand.ts
+│   │   │       ├── useParseMarkdown.ts
+│   │   │       ├── useSendMessages.ts
+│   │   │       └── useViewport.ts
+│   │   ├── event
+│   │   │   └── components
+│   │   │       ├── Event.tsx
+│   │   │       ├── EventButton.tsx
+│   │   │       ├── EventFeedbacks.tsx
+│   │   │       └── EventSkeleton.tsx
 │   │   ├── events
 │   │   │   ├── components
-│   │   │   │   ├── Event.tsx
-│   │   │   │   ├── EventDetailsPopup.tsx
 │   │   │   │   ├── EventHashtag.tsx
-│   │   │   │   └── EventItem.tsx
+│   │   │   │   ├── EventItem.tsx
+│   │   │   │   ├── EventItemSkeleton.tsx
+│   │   │   │   ├── Events.tsx
+│   │   │   │   └── EventsSearch.tsx
 │   │   │   └── hooks
+│   │   │       ├── useEventsZustand.ts
+│   │   │       ├── useParticipate.ts
+│   │   │       └── useSendFeedback.ts
 │   │   └── home
 │   │       ├── components
 │   │       │   ├── ContrinueRegistrationForm.tsx
-│   │       │   ├── UpcomingEvents.tsx
-│   │       │   └── UserProfileCard.tsx
+│   │       │   ├── ProfileCard.tsx
+│   │       │   ├── ProfileCardSkeleton.tsx
+│   │       │   └── UpcomingEvents.tsx
 │   │       └── hooks
 │   │           └── useContinueRegistration.ts
 │   ├── initTelegramSdk.ts
@@ -51,6 +70,7 @@
 │   │   │   └── axios.ts
 │   │   └── modules
 │   │       ├── event
+│   │       │   ├── event.service.ts
 │   │       │   └── event.types.ts
 │   │       └── user
 │   │           ├── user.service.ts
@@ -64,13 +84,15 @@
 │   │   └── hooks
 │   │       ├── useDebounce.ts
 │   │       ├── useDebugTg.ts
+│   │       ├── useGetMyEvents.ts
+│   │       ├── useKeyboard.ts
 │   │       ├── useShowBottomMenu.ts
 │   │       ├── useSplashScreenZustand.ts
-│   │       └── useTgUserZustand.ts
+│   │       └── useUserZustand.ts
 │   └── vite-env.d.ts
 ├── tsconfig.app.json
 ├── tsconfig.json
 ├── tsconfig.node.json
 └── vite.config.ts
 
-26 directories, 48 files
+27 directories, 69 files
